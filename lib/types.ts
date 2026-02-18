@@ -2,7 +2,7 @@ export type RoomType = 'single' | 'double' | 'triple+';
 export type BathroomType = 'private' | 'shared';
 export type Quarter = 'fall' | 'winter' | 'spring' | 'summer';
 export type RoommatePreference = 'male' | 'female' | 'coed';
-export type ParkingType = 'covered' | 'garage';
+export type ParkingType = 'covered' | 'garage' | 'street';
 export type ReviewSource = 'reddit' | 'bruinwalk';
 
 export interface Amenities {
