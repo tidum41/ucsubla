@@ -87,9 +87,9 @@ export default function Home() {
       />
 
       {/* Spacer for fixed header */}
-      <div className="h-[100px] safe-area-top" />
+      <div className="h-[108px] safe-area-top" />
 
-      <main className="px-5 pt-4">
+      <main className="px-5 pt-3">
         {/* Section heading */}
         <h2 className="text-h2 text-darkSlate mb-4">
           Newest listings near campus

@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbars globally (app still scrolls) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @layer base {
   body {
     @apply bg-background text-darkSlate font-sans;
@@ -151,8 +161,8 @@
   }
 
   .blurHeaderLargeContent {
-    height: 100px;
-    padding: 8px 20px;
+    height: 108px;
+    padding: 12px 20px;
   }
 
   /* Solid header variant with nav icons (back/share/bookmark) */
@@ -188,16 +198,16 @@
   }
 
   .blurHeaderCenteredContent {
-    height: 52px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 20px;
+    padding: 8px 20px;
   }
 
   /* Safe area for iPhone home indicator */
   .pb-safe {
-    padding-bottom: max(env(safe-area-inset-bottom), 12px);
+    padding-bottom: max(env(safe-area-inset-bottom), 24px);
   }
 
   /* Date input styling for better mobile experience */

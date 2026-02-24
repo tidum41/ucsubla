@@ -30,6 +30,7 @@ const iconMap: Record<string, LucideIcon> = {
   house: Home,
   bookmark: Bookmark,
   message: MessageCircle,
+  'message.fill': MessageCircle,
   person: User,
   'person.2': Users,
   'person.3': UsersRound,

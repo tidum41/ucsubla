@@ -60,7 +60,7 @@ export default function ChipGroup({
               className={`px-4 py-2.5 rounded-lg border transition-colors flex items-center gap-2 ${
                 isSelected
                   ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                  : 'bg-white border-gray-200 text-slateGray hover:border-gray-300'
+                  : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
               }`}
             >
               {option.icon && <span className="text-lg">{option.icon}</span>}

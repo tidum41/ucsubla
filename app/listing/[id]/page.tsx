@@ -161,7 +161,7 @@ export default function ListingDetailsPage() {
             {amenityList.map((amenity) => (
               <div
                 key={amenity.key}
-                className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 flex items-center gap-2"
+                className="bg-white border border-gray-300 rounded-xl px-4 py-2.5 flex items-center gap-2"
               >
                 <span className="text-body text-darkSlate">{amenity.label}</span>
               </div>
@@ -191,12 +191,12 @@ export default function ListingDetailsPage() {
       </div>
 
       {/* Message Button (Fixed) */}
-      <div className="fixed bottom-20 left-0 right-0 px-6 py-2 app-container">
+      <div className="fixed bottom-20 left-0 right-0 px-6 py-4 app-container">
         <button
           onClick={() => router.push('/messages')}
-          className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated flex items-center justify-center gap-2"
+          className="w-full btn-primary shadow-elevated flex items-center justify-center gap-2"
         >
-          <Icon name="message" size={20} className="text-white" />
+          <Icon name="message" size={18} className="text-white" />
           <span>Message</span>
         </button>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Icon from '@/components/common/Icon';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockUser, mockListings } from '@/lib/mockData';
@@ -8,17 +9,62 @@ import { getInitials } from '@/lib/utils';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const myListings = mockListings.filter((l) => l.listerId === mockUser.id);
+  const [displayName, setDisplayName] = useState(mockUser.name);
+  const [toast, setToast] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('user-profile');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.name) setDisplayName(parsed.name);
+    }
+  }, []);
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  };
+
+  const userListings = typeof window !== 'undefined'
+    ? JSON.parse(localStorage.getItem('user-listings') || '[]')
+    : [];
+  const myListingsCount = mockListings.filter((l) => l.listerId === mockUser.id).length + userListings.length;
 
   const menuItems = [
-    { icon: 'house', label: 'My Listings', count: myListings.length, onClick: () => {} },
-    { icon: 'bookmark', label: 'Saved', count: mockUser.bookmarks.length, onClick: () => router.push('/bookmarks') },
-    { icon: 'person', label: 'Account Settings', onClick: () => {} },
-    { icon: 'checkmark.seal.fill', label: 'Verification', badge: mockUser.verifiedUCLA ? 'Verified' : 'Not Verified', onClick: () => {} },
+    {
+      icon: 'house',
+      label: 'My Listings',
+      count: myListingsCount,
+      onClick: () => router.push('/my-listings'),
+    },
+    {
+      icon: 'bookmark',
+      label: 'Saved',
+      count: mockUser.bookmarks.length,
+      onClick: () => router.push('/bookmarks'),
+    },
+    {
+      icon: 'person',
+      label: 'Account Settings',
+      onClick: () => router.push('/settings'),
+    },
+    {
+      icon: 'checkmark.seal.fill',
+      label: 'Verification',
+      badge: mockUser.verifiedUCLA ? 'Verified' : 'Not Verified',
+      onClick: () => showToast('UCLA verification coming soon'),
+    },
   ];
 
   return (
     <div className="min-h-screen pb-20 bg-background app-container">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-darkSlate text-white text-small font-medium px-4 py-2 rounded-full shadow-elevated whitespace-nowrap">
+          {toast}
+        </div>
+      )}
+
       {/* Header */}
       <div className="blurHeader app-container">
         <div className="blurHeaderContent">
@@ -31,21 +77,26 @@ export default function ProfilePage() {
 
       {/* Profile Info */}
       <div className="px-5 pt-4 mb-6">
-        <div className="card p-6">
-          <div className="flex items-center gap-4 mb-4">
+        <div className="card p-5">
+          <button
+            onClick={() => router.push('/profile/edit')}
+            className="flex items-center gap-3 mb-3 w-full text-left hover:opacity-80 transition-opacity"
+          >
             {/* Avatar */}
-            <div className="w-16 h-16 rounded-full bg-uclaBlue flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
               <span className="text-white font-medium text-xl">
-                {getInitials(mockUser.name)}
+                {getInitials(displayName)}
               </span>
             </div>
 
             {/* User Info */}
             <div className="flex-1">
-              <h2 className="text-h2 text-darkSlate">{mockUser.name}</h2>
+              <h2 className="text-h2 text-darkSlate">{displayName}</h2>
               <p className="text-body text-slateGray">{mockUser.email}</p>
             </div>
-          </div>
+
+            <Icon name="chevron.right" size={18} className="text-lightSlate" />
+          </button>
 
           {/* Verification Badge */}
           {mockUser.verifiedUCLA && (
@@ -95,7 +146,7 @@ export default function ProfilePage() {
       <div className="px-5 mt-6">
         <button
           onClick={() => router.push('/login')}
-          className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-body text-red-600 font-medium hover:bg-red-50 transition-colors"
+          className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-body text-red-500 font-medium hover:bg-red-50 transition-colors"
         >
           Log Out
         </button>

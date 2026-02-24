@@ -1,29 +1,45 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Icon from '@/components/common/Icon';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockConversations, mockMessages, mockListings, mockUser } from '@/lib/mockData';
 import { formatTimestamp, getInitials } from '@/lib/utils';
-import type { Conversation, Message } from '@/lib/types';
+import type { Message } from '@/lib/types';
 
 export default function MessagesPage() {
   const router = useRouter();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messageText, setMessageText] = useState('');
+  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const selectedConversation = mockConversations.find(
     (c) => c.id === selectedConversationId
   );
-  const conversationMessages = selectedConversationId
-    ? mockMessages.filter((m) => m.conversationId === selectedConversationId)
-    : [];
+  const conversationMessages = messages.filter(
+    (m) => m.conversationId === selectedConversationId
+  );
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (selectedConversationId) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [conversationMessages.length, selectedConversationId]);
 
   const handleSendMessage = () => {
-    if (!messageText.trim()) return;
-    // In a real app, this would send the message to the backend
-    console.log('Sending message:', messageText);
+    if (!messageText.trim() || !selectedConversationId) return;
+    const newMessage: Message = {
+      id: `msg-${Date.now()}`,
+      conversationId: selectedConversationId,
+      senderId: mockUser.id,
+      text: messageText.trim(),
+      timestamp: new Date().toISOString(),
+      read: true,
+    };
+    setMessages(prev => [...prev, newMessage]);
     setMessageText('');
   };
 
@@ -49,21 +65,18 @@ export default function MessagesPage() {
                 const listing = mockListings.find(
                   (l) => l.id === conversation.listingId
                 );
-                const otherParticipantId = conversation.participants.find(
-                  (p) => p !== mockUser.id
-                );
 
                 return (
                   <button
                     key={conversation.id}
                     onClick={() => setSelectedConversationId(conversation.id)}
-                    className="w-full card p-4 hover:bg-gray-50 transition-colors text-left"
+                    className="w-full card shadow-card p-4 hover:bg-gray-50 transition-colors text-left"
                   >
                     <div className="flex gap-3">
                       {/* Avatar */}
                       <div className="w-12 h-12 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
                         <span className="text-white font-medium text-body">
-                          {getInitials('Other User')}
+                          {getInitials('Sarah Johnson')}
                         </span>
                       </div>
 
@@ -97,11 +110,13 @@ export default function MessagesPage() {
               })}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <Icon name="message" size={48} className="text-lightSlate mx-auto mb-3" />
-              <p className="text-body text-slateGray">No messages yet</p>
-              <p className="text-small text-lightSlate mt-1">
-                Start a conversation by messaging a listing
+            <div className="flex flex-col items-center justify-center py-24 text-center px-8">
+              <div className="w-16 h-16 rounded-full bg-uclaBlue/10 flex items-center justify-center mb-4">
+                <Icon name="message" size={28} className="text-uclaBlue" />
+              </div>
+              <h3 className="text-h2 text-darkSlate mb-1">No messages yet</h3>
+              <p className="text-body text-slateGray">
+                Start a conversation by tapping Message on any listing
               </p>
             </div>
           )}
@@ -114,11 +129,6 @@ export default function MessagesPage() {
 
   // Chat View
   const listing = mockListings.find((l) => l.id === selectedConversation?.listingId);
-  // Get the other participant (lister)
-  const otherParticipantId = selectedConversation?.participants.find(
-    (p) => p !== mockUser.id
-  );
-  // For now, use a mock lister name. In production, you'd fetch the actual user data
   const listerName = 'Sarah Johnson';
   const listerVerified = true;
 
@@ -194,23 +204,24 @@ export default function MessagesPage() {
             </div>
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Message Input - Fixed above nav bar */}
-      <div className="fixed bottom-20 left-0 right-0 px-6 py-3 bg-background app-container z-30">
+      {/* Message Input */}
+      <div className="fixed bottom-20 left-0 right-0 px-4 py-3 bg-background/90 backdrop-blur-sm border-t border-borderLight app-container z-30">
         <div className="flex items-center gap-2">
           <input
             type="text"
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
             placeholder="Type a message..."
             className="flex-1 bg-white border border-border rounded-full px-4 py-2.5 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-0 focus:border-uclaBlue"
           />
           <button
             onClick={handleSendMessage}
             disabled={!messageText.trim()}
-            className="bg-uclaBlue text-white rounded-full p-2.5 hover:bg-[#25579e] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-uclaBlue text-white rounded-full p-2.5 hover:bg-[#25579e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             aria-label="Send message"
           >
             <Icon name="chevron.right" size={20} className="text-white" />
@@ -221,8 +232,4 @@ export default function MessagesPage() {
       <BottomNav />
     </div>
   );
-}
-
-function formatPrice(price: number): string {
-  return `$${price.toLocaleString()}`;
 }

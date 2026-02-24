@@ -245,7 +245,7 @@ export default function FilterModal({
                   className={`px-4 py-2.5 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-200 text-slateGray hover:border-gray-300'
+                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -265,7 +265,7 @@ export default function FilterModal({
                   className={`px-4 py-2.5 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-200 text-slateGray hover:border-gray-300'
+                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -285,7 +285,7 @@ export default function FilterModal({
                   className={`px-4 py-2.5 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-200 text-slateGray hover:border-gray-300'
+                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -305,7 +305,7 @@ export default function FilterModal({
                   className={`px-4 py-2.5 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-200 text-slateGray hover:border-gray-300'
+                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>

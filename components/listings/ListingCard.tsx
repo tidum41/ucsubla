@@ -42,8 +42,8 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle }:
           )}
 
           {/* Price badge */}
-          <div className="absolute top-2 left-2 bg-[#f7f7f6] px-2 py-0.5 rounded-md">
-            <span className="text-sm font-medium text-uclaBlue">
+          <div className="absolute top-3 left-3 bg-white rounded-full px-3 py-1 shadow-card">
+            <span className="text-sm font-semibold text-uclaBlue">
               {formatPrice(listing.price)}
             </span>
           </div>

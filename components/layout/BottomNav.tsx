@@ -8,10 +8,10 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Home', icon: 'house', path: '/' },
-    { name: 'Saved', icon: 'bookmark', path: '/bookmarks' },
-    { name: 'Chat', icon: 'message', path: '/messages' },
-    { name: 'Profile', icon: 'person', path: '/profile' },
+    { name: 'Home', icon: 'house', iconActive: 'house', path: '/' },
+    { name: 'Saved', icon: 'bookmark', iconActive: 'bookmark', path: '/bookmarks' },
+    { name: 'Chat', icon: 'message', iconActive: 'message.fill', path: '/messages' },
+    { name: 'Profile', icon: 'person', iconActive: 'person', path: '/profile' },
   ];
 
   return (
@@ -29,7 +29,7 @@ export default function BottomNav() {
               className="flex flex-col items-center gap-1"
             >
               <Icon
-                name={item.icon}
+                name={isActive ? item.iconActive : item.icon}
                 size={24}
                 className={isActive ? 'text-uclaBlue' : 'text-lightSlate'}
                 strokeWidth={2}
