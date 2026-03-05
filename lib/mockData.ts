@@ -205,7 +205,7 @@ export const mockListings: Listing[] = [
     address: '10850 Strathmore Dr',
     distanceFromCampus: 1.2,
     images: [
-      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800',
+      '/listings/apt6.jpg',
     ],
     roomType: 'triple+',
     bathroomType: 'shared',
@@ -241,9 +241,8 @@ export const mockListings: Listing[] = [
     address: '10990 Wilshire Blvd',
     distanceFromCampus: 0.9,
     images: [
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
-      'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=800',
-      'https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800',
+      '/listings/apt7_1.jpg',
+      '/listings/apt7_2.png',
     ],
     roomType: 'single',
     bathroomType: 'private',
@@ -279,7 +278,8 @@ export const mockListings: Listing[] = [
     address: '636 Landfair Ave',
     distanceFromCampus: 0.5,
     images: [
-      'https://images.unsplash.com/photo-1556912167-f556f1f39fdf?w=800',
+      '/listings/apt8_1.jpg',
+      '/listings/apt8_2.jpg',
     ],
     roomType: 'single',
     bathroomType: 'shared',
