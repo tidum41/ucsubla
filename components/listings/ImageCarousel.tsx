@@ -65,7 +65,7 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
         {/* Sliding image strip */}
         <div
           className="flex h-full transition-transform duration-300 ease-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)`, width: `${images.length * 100}%` }}
+          style={{ transform: `translateX(-${currentIndex * (100 / images.length)}%)`, width: `${images.length * 100}%` }}
         >
           {images.map((src, i) => (
             <div key={i} className="relative h-full flex-shrink-0" style={{ width: `${100 / images.length}%` }}>
