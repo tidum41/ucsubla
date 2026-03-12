@@ -12,6 +12,7 @@ interface ChipGroupProps {
   onChange: (selected: string[]) => void;
   multiSelect?: boolean;
   label?: string;
+  pill?: boolean;
 }
 
 export default function ChipGroup({
@@ -20,6 +21,7 @@ export default function ChipGroup({
   onChange,
   multiSelect = true,
   label,
+  pill = false,
 }: ChipGroupProps) {
   const handleToggle = (value: string) => {
     if (multiSelect) {
@@ -57,10 +59,12 @@ export default function ChipGroup({
             <button
               key={option.value}
               onClick={() => handleToggle(option.value)}
-              className={`px-4 py-2.5 rounded-lg border transition-colors flex items-center gap-2 ${
+              className={`px-4 py-2 border transition-colors flex items-center gap-2 ${
+                pill ? 'rounded-full justify-center' : 'rounded-lg'
+              } ${
                 isSelected
                   ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                  : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
+                  : 'bg-white border-[#E2E8F0] text-slateGray'
               }`}
             >
               {option.icon && <span className="text-lg">{option.icon}</span>}

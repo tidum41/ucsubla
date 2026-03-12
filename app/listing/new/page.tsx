@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Icon from '@/components/common/Icon';
+import DatePickerField from '@/components/common/DatePickerField';
 import ChipGroup from '@/components/filters/ChipGroup';
 import RangeSlider from '@/components/filters/RangeSlider';
 import BottomNav from '@/components/layout/BottomNav';
@@ -438,33 +439,21 @@ export default function CreateListingPage() {
         {/* Availability */}
         <div className="space-y-4">
           <h2 className="text-h2 text-darkSlate">Availability</h2>
-          <div className="flex flex-col gap-4">
-            <div id="moveInDate">
-              <label htmlFor="move-in-input" className="block text-small text-slateGray mb-2">
-                Move In <span className="text-red-600">*</span>
-              </label>
-              <input
-                id="move-in-input"
-                type="date"
-                value={formData.moveInDate}
-                onChange={(e) => setFormData({ ...formData, moveInDate: e.target.value })}
-                className="w-full bg-white border border-border rounded-lg px-4 py-3 text-body text-slateGray text-left"
-              />
-              {errors.moveInDate && <p className="text-small text-red-600 mt-1">{errors.moveInDate}</p>}
-            </div>
-            <div id="moveOutDate">
-              <label htmlFor="move-out-input" className="block text-small text-slateGray mb-2">
-                Move Out <span className="text-red-600">*</span>
-              </label>
-              <input
-                id="move-out-input"
-                type="date"
-                value={formData.moveOutDate}
-                onChange={(e) => setFormData({ ...formData, moveOutDate: e.target.value })}
-                className="w-full bg-white border border-border rounded-lg px-4 py-3 text-body text-slateGray text-left"
-              />
-              {errors.moveOutDate && <p className="text-small text-red-600 mt-1">{errors.moveOutDate}</p>}
-            </div>
+          <div className="grid grid-cols-2 gap-3">
+            <DatePickerField
+              label="Move In"
+              value={formData.moveInDate}
+              onChange={(v) => setFormData({ ...formData, moveInDate: v })}
+              required
+              error={errors.moveInDate}
+            />
+            <DatePickerField
+              label="Move Out"
+              value={formData.moveOutDate}
+              onChange={(v) => setFormData({ ...formData, moveOutDate: v })}
+              required
+              error={errors.moveOutDate}
+            />
           </div>
 
           <div id="quarters">
@@ -474,6 +463,7 @@ export default function CreateListingPage() {
               selected={formData.quarters}
               onChange={handleQuarterChange}
               multiSelect={true}
+              pill
             />
             {errors.quarters && <p className="text-small text-red-600 mt-1">{errors.quarters}</p>}
           </div>
@@ -520,7 +510,7 @@ export default function CreateListingPage() {
                   key={item.key}
                   type="button"
                   onClick={() => toggleAmenity(item.key as keyof Amenities)}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     formData.amenities[item.key as keyof Amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'
@@ -547,7 +537,7 @@ export default function CreateListingPage() {
                   key={item.key}
                   type="button"
                   onClick={() => toggleAmenity(item.key as keyof Amenities)}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     formData.amenities[item.key as keyof Amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'
@@ -573,7 +563,7 @@ export default function CreateListingPage() {
                   key={item.key}
                   type="button"
                   onClick={() => toggleAmenity(item.key as keyof Amenities)}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     formData.amenities[item.key as keyof Amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'
@@ -600,7 +590,7 @@ export default function CreateListingPage() {
                       amenities: { ...formData.amenities, parking },
                     });
                   }}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     formData.amenities.parking === option.value
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'

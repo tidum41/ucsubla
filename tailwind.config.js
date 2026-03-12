@@ -11,6 +11,7 @@ module.exports = {
         uclaBlue: "#2d68c4",
         darkSlate: "#0f172a",
         slateGray: "#64748b",
+        mediumSlate: "#475569",
         lightSlate: "#94a3b8",
         border: "#e2e8f0",
         borderLight: "#f1f5f9",

@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "UCSubLA - UCLA Subleasing",
+  title: "BruinLease - UCLA Subleasing",
   description: "Find and list sublease opportunities near UCLA campus",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "UCSubLA",
+    title: "BruinLease",
   },
   themeColor: "#F8FAFC",
 };

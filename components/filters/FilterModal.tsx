@@ -6,6 +6,7 @@ import RangeSlider from './RangeSlider';
 import ToggleSwitch from './ToggleSwitch';
 import ChipGroup from './ChipGroup';
 import { formatPrice, countActiveFilters } from '@/lib/utils';
+import DatePickerField from '../common/DatePickerField';
 import type { FilterState, Quarter, RoomType, BathroomType, RoommatePreference } from '@/lib/types';
 
 interface FilterModalProps {
@@ -50,6 +51,26 @@ export default function FilterModal({
   const handleApply = () => {
     onApply(filters);
     onClose();
+  };
+
+  const QUARTER_DATES: Record<string, { moveIn: string; moveOut: string }> = {
+    spring: { moveIn: '2026-03-25', moveOut: '2026-06-12' },
+    summer: { moveIn: '2026-06-22', moveOut: '2026-09-11' },
+    fall:   { moveIn: '2026-09-21', moveOut: '2026-12-11' },
+    winter: { moveIn: '2027-01-04', moveOut: '2027-03-19' },
+  };
+
+  const handleQuarterChange = (quarters: string[]) => {
+    const updated: FilterState = { ...filters, quarters: quarters as Quarter[] };
+    if (quarters.length > 0) {
+      const dates = quarters.map((q) => QUARTER_DATES[q]).filter(Boolean);
+      updated.moveInDate  = dates.reduce((min, d) => d.moveIn  < min ? d.moveIn  : min, dates[0].moveIn);
+      updated.moveOutDate = dates.reduce((max, d) => d.moveOut > max ? d.moveOut : max, dates[0].moveOut);
+    } else {
+      updated.moveInDate  = null;
+      updated.moveOutDate = null;
+    }
+    setFilters(updated);
   };
 
   const quarterOptions = [
@@ -154,32 +175,25 @@ export default function FilterModal({
             <h2 className="text-h2 text-darkSlate">Availability</h2>
 
             {/* Date inputs */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-small text-slateGray block mb-2">Move In</label>
-                <input
-                  type="date"
-                  value={filters.moveInDate || ''}
-                  onChange={(e) => setFilters({ ...filters, moveInDate: e.target.value || null })}
-                  className="w-full bg-white border border-border rounded-lg px-4 py-3 text-body text-slateGray"
-                />
-              </div>
-              <div>
-                <label className="text-small text-slateGray block mb-2">Move Out</label>
-                <input
-                  type="date"
-                  value={filters.moveOutDate || ''}
-                  onChange={(e) => setFilters({ ...filters, moveOutDate: e.target.value || null })}
-                  className="w-full bg-white border border-border rounded-lg px-4 py-3 text-body text-slateGray"
-                />
-              </div>
+            <div className="grid grid-cols-2 gap-3">
+              <DatePickerField
+                label="Move In"
+                value={filters.moveInDate || ''}
+                onChange={(v) => setFilters({ ...filters, moveInDate: v || null })}
+              />
+              <DatePickerField
+                label="Move Out"
+                value={filters.moveOutDate || ''}
+                onChange={(v) => setFilters({ ...filters, moveOutDate: v || null })}
+              />
             </div>
 
             {/* Quarter chips */}
             <ChipGroup
               options={quarterOptions}
               selected={filters.quarters}
-              onChange={(quarters) => setFilters({ ...filters, quarters: quarters as Quarter[] })}
+              onChange={handleQuarterChange}
+              pill
             />
           </div>
 
@@ -242,10 +256,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
+                      : 'bg-white border-[#E2E8F0] text-slateGray'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -262,10 +276,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
+                      : 'bg-white border-[#E2E8F0] text-slateGray'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -282,10 +296,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
+                      : 'bg-white border-[#E2E8F0] text-slateGray'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -302,10 +316,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2.5 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-gray-300 text-slateGray hover:border-gray-400'
+                      : 'bg-white border-[#E2E8F0] text-slateGray'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -339,7 +353,7 @@ export default function FilterModal({
             onClick={handleApply}
             className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated"
           >
-            Apply Filters ({resultCount})
+            Apply Filters
           </button>
         </div>
       </div>
