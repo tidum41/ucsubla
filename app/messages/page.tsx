@@ -13,7 +13,13 @@ export default function MessagesPage() {
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messageText, setMessageText] = useState('');
   const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const [isLoaded, setIsLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoaded(true), 350);
+    return () => clearTimeout(t);
+  }, []);
 
   const selectedConversation = mockConversations.find(
     (c) => c.id === selectedConversationId
@@ -47,25 +53,40 @@ export default function MessagesPage() {
   if (!selectedConversationId) {
     return (
       <>
-        <div className="min-h-screen pb-20 bg-background app-container page-fade-in">
-          {/* Header */}
-          <div className="blurHeader app-container">
-            <div className="blurHeaderContent">
-              <h1 className="text-h1 text-darkSlate">Chat</h1>
-            </div>
+        {/* Header — static, outside animated content */}
+        <div className="blurHeader app-container">
+          <div className="blurHeaderContent">
+            <h1 className="text-h1 text-darkSlate">Chat</h1>
           </div>
+        </div>
 
+        <div className="min-h-screen pb-20 bg-background app-container">
           {/* Spacer for fixed nav */}
           <div className="h-[52px]" style={{ marginTop: 'env(safe-area-inset-top)' }} />
 
           {/* Conversations */}
           <div className="px-5 pt-4">
-            {mockConversations.length > 0 ? (
+            {!isLoaded ? (
+              <div className="space-y-2">
+                {[0, 1].map(i => (
+                  <div key={i} className="card p-4">
+                    <div className="flex gap-3 items-center">
+                      <div className="skeleton-shimmer w-12 h-12 rounded-full flex-shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="skeleton-shimmer h-4 w-40 rounded-md" />
+                        <div className="skeleton-shimmer h-3 w-56 rounded-md" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : mockConversations.length > 0 ? (
               <div className="space-y-2">
                 {mockConversations.map((conversation) => {
                   const listing = mockListings.find(
                     (l) => l.id === conversation.listingId
                   );
+                  const hasUnread = conversation.unreadCount > 0;
 
                   return (
                     <button
@@ -74,17 +95,20 @@ export default function MessagesPage() {
                       className="w-full card shadow-card p-4 hover:bg-gray-50 transition-colors text-left"
                     >
                       <div className="flex gap-3">
-                        {/* Avatar */}
-                        <div className="w-12 h-12 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
+                        {/* Avatar with unread dot */}
+                        <div className="relative w-12 h-12 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
                           <span className="text-white font-medium text-body">
                             {getInitials('Sarah Johnson')}
                           </span>
+                          {hasUnread && (
+                            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-white border-[2.5px] border-uclaBlue" />
+                          )}
                         </div>
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2 mb-1">
-                            <h3 className="text-h3 text-darkSlate truncate">
+                            <h3 className={`text-h3 truncate ${hasUnread ? 'font-semibold text-darkSlate' : 'font-normal text-darkSlate'}`}>
                               {listing?.address || 'Unknown Listing'}
                             </h3>
                             <span className="text-small text-slateGray flex-shrink-0">
@@ -93,16 +117,9 @@ export default function MessagesPage() {
                           </div>
 
                           <div className="flex items-center justify-between gap-2">
-                            <p className="text-body text-slateGray truncate">
+                            <p className={`text-body truncate ${hasUnread ? 'font-medium text-darkSlate' : 'text-slateGray'}`}>
                               {conversation.lastMessage.text}
                             </p>
-                            {conversation.unreadCount > 0 && (
-                              <div className="bg-uclaBlue rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center flex-shrink-0 shadow-[0_1px_4px_rgba(37,99,235,0.45)] ring-[1.5px] ring-white">
-                                <span className="text-white text-[11px] font-semibold leading-none">
-                                  {conversation.unreadCount}
-                                </span>
-                              </div>
-                            )}
                           </div>
                         </div>
                       </div>
@@ -135,7 +152,7 @@ export default function MessagesPage() {
 
   return (
     <>
-    <div className="min-h-screen bg-background app-container page-fade-in">
+    <div className="min-h-screen bg-background app-container">
       {/* Chat Header */}
       <div className="blurHeaderWithNav app-container">
         <div className="blurHeaderWithNavContent">
@@ -176,6 +193,13 @@ export default function MessagesPage() {
 
       {/* Messages */}
       <div className="overflow-y-auto px-5 py-6 pb-36 space-y-4">
+        {/* Date separator */}
+        <div className="flex items-center gap-3 mb-2">
+          <div className="flex-1 h-px bg-borderLight" />
+          <span className="text-[11px] text-lightSlate font-medium tracking-wide uppercase">February 12</span>
+          <div className="flex-1 h-px bg-borderLight" />
+        </div>
+
         {conversationMessages.map((message) => {
           const isSentByMe = message.senderId === mockUser.id;
 
@@ -187,8 +211,8 @@ export default function MessagesPage() {
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
                   isSentByMe
-                    ? 'bg-uclaBlue text-white'
-                    : 'bg-gray-200 text-darkSlate'
+                    ? 'bg-uclaBlue text-white shadow-[0_2px_6px_rgba(37,99,235,0.28)]'
+                    : 'bg-white text-darkSlate border border-borderLight shadow-sm'
                 }`}
               >
                 <p className="text-body">{message.text}</p>
