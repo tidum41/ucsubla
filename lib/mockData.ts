@@ -18,7 +18,7 @@ export const mockListings: Listing[] = [
     address: '691 Levering Ave',
     distanceFromCampus: 0.5,
     images: [
-      '/listings/apt1_1.webp',
+      '/listings/apt4_3.jpg',
       '/listings/apt1_2.webp',
       '/listings/apt1_3.webp',
     ],
@@ -56,7 +56,7 @@ export const mockListings: Listing[] = [
     address: '10889 Wilshire Blvd',
     distanceFromCampus: 0.8,
     images: [
-      '/listings/apt2_1.webp',
+      '/listings/apt6.jpg',
       '/listings/apt2_2.webp',
     ],
     roomType: 'single',
@@ -88,13 +88,12 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-3',
-    title: 'Double room in 2BR apt on Kelton — Summer/Fall',
+    title: 'Double room in 2BR apt on Roebling — Summer/Fall',
     price: 950,
-    address: '625 Kelton Ave',
+    address: '10982 Roebling Ave',
     distanceFromCampus: 0.4,
     images: [
       '/listings/apt3_1.jpg',
-      '/listings/apt3_2.jpg',
       '/listings/apt3_3.jpg',
     ],
     roomType: 'double',
@@ -114,7 +113,7 @@ export const mockListings: Listing[] = [
       laundryInUnit: false,
       laundryOnSite: true,
       balcony: false,
-      parking: 'street',
+      parking: 'covered',
       fitnessCenter: false,
       pool: false,
       hotTub: false,
@@ -133,7 +132,6 @@ export const mockListings: Listing[] = [
     images: [
       '/listings/apt4_1.jpg',
       '/listings/apt4_2.jpg',
-      '/listings/apt4_3.jpg',
     ],
     roomType: 'single',
     bathroomType: 'private',
@@ -205,7 +203,7 @@ export const mockListings: Listing[] = [
     address: '10850 Strathmore Dr',
     distanceFromCampus: 1.2,
     images: [
-      '/listings/apt6.jpg',
+      '/listings/apt3_2.jpg',
     ],
     roomType: 'triple+',
     bathroomType: 'shared',
@@ -356,6 +354,33 @@ export const mockReviews: Review[] = [
     sourceName: 'r/ucla',
     text: 'Wilshire corridor has amazing buildings but they\'re pricey. Worth it if you can afford it - gym and pool are top-notch.',
     timestamp: '2025-09-25T11:30:00Z',
+  },
+  {
+    id: 'review-3a',
+    listingId: 'listing-3',
+    source: 'reddit',
+    sourceUrl: 'https://www.reddit.com/r/ucla/comments/1qgks4x/club_california_on_roebling_apartment_thoughts/',
+    sourceName: 'r/ucla',
+    text: 'It\'s pricey but nice. The gym facilities, pool, lounge and I think they still have the half basketball court, are all really nice. I lived there during undergrad back in 2015-2017 and I really liked it. I never had any issues with noise. At the time a lot of med students/residents lived there.',
+    timestamp: '2025-12-01T10:00:00Z',
+  },
+  {
+    id: 'review-3b',
+    listingId: 'listing-3',
+    source: 'bruinwalk',
+    sourceUrl: 'https://bruinwalk.com/apartments/10982-roebling-ave/',
+    sourceName: 'Bruinwalk',
+    text: 'Surprisingly rude management. Do NOT expect to have a social atmosphere — parties are NOT tolerated.',
+    timestamp: '2026-03-03T10:00:00Z',
+  },
+  {
+    id: 'review-3c',
+    listingId: 'listing-3',
+    source: 'yelp',
+    sourceUrl: 'https://www.yelp.com/biz/club-california-apartments-los-angeles',
+    sourceName: 'Yelp',
+    text: 'Absolutely horrible apartment building. Living here is only marginally better than being homeless. There are multiple frat houses directly underneath and around the building blaring loud music until the wee hours of the morning. Management is practically absent and non responsive to maintenance calls. Streets around it are filthy and filled with people experiencing homelessness. There are tons of package thefts and vehicular breakins. I did not feel safe here. Rents here are usually too high considering the downsides — tread carefully.',
+    timestamp: '2025-06-15T10:00:00Z',
   },
 ];
 

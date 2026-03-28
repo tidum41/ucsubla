@@ -3,7 +3,7 @@ export type BathroomType = 'private' | 'shared';
 export type Quarter = 'fall' | 'winter' | 'spring' | 'summer';
 export type RoommatePreference = 'male' | 'female' | 'coed';
 export type ParkingType = 'covered' | 'garage' | 'street';
-export type ReviewSource = 'reddit' | 'bruinwalk';
+export type ReviewSource = 'reddit' | 'bruinwalk' | 'yelp';
 
 export interface Amenities {
   furnished: boolean;

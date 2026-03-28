@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UCSubLA – Explore Page UI Exploration</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background: #c8cdd6;
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  padding: 64px 48px;
+  min-height: 100vh;
+  align-items: flex-start;
+}
+:root {
+  --uclaBlue: #2d68c4;
+  --darkSlate: #0f172a;
+  --slateGray: #64748b;
+  --lightSlate: #94a3b8;
+  --bg: #efefef;
+  --tagBg: #f8fafc;
+  --border: #e2e8f0;
+  --headerBg: #F8FAFC;
+}
+.phone-section { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.phone-label {
+  font-size: 11px; font-weight: 700; color: #4a5568;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.phone-frame {
+  width: 390px; height: 844px;
+  border-radius: 44px; overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2);
+  position: relative;
+  background: var(--bg);
+  border: 8px solid #111;
+}
+
+/* ── STATUS BAR ── */
+.status-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 44px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px 0; z-index: 100; pointer-events: none;
+}
+.status-time { font-size: 15px; font-weight: 600; color: var(--darkSlate); }
+.status-icons { display: flex; align-items: center; gap: 6px; }
+
+/* ── CURRENT HEADER ── */
+.header {
+  position: absolute; top: 44px; left: 0; right: 0;
+  background: rgba(248,250,252,0.94);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px 10px;
+  height: 108px;
+  display: flex; flex-direction: column; justify-content: center; gap: 8px;
+  z-index: 50;
+}
+.header-row1 { display: flex; align-items: center; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 8px; }
+.logo-icon {
+  background: var(--uclaBlue); border-radius: 8px;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-text { font-size: 18px; font-weight: 700; color: var(--uclaBlue); letter-spacing: -0.3px; }
+.list-btn {
+  background: var(--uclaBlue); color: white; border-radius: 18px;
+  padding: 6px 10px; font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 4px;
+}
+.search-bar {
+  display: flex; align-items: center;
+  background: white; border: 1px solid var(--border);
+  border-radius: 9999px; overflow: hidden; height: 40px;
+}
+.search-input-area {
+  flex: 1; display: flex; align-items: center;
+  padding: 0 12px 0 36px; position: relative;
+}
+.search-icon-wrap {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+}
+.search-placeholder { font-size: 14px; color: var(--lightSlate); }
+.filter-btn {
+  padding: 0 12px; height: 100%;
+  border-left: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  background: none;
+}
+
+/* ── MAIN CONTENT (CURRENT) ── */
+.main-content {
+  position: absolute; top: 152px; left: 0; right: 0; bottom: 0;
+  background: var(--bg);
+}
+.main-inner { padding: 12px 20px 120px; }
+.section-heading { font-size: 17px; font-weight: 700; color: var(--darkSlate); margin-bottom: 16px; }
+.listings-stack { display: flex; flex-direction: column; gap: 16px; }
+
+/* ── LISTING CARD (CURRENT) ── */
+.listing-card {
+  background: white; border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden;
+}
+.card-image { height: 224px; width: 100%; position: relative; overflow: hidden; }
+.price-badge {
+  position: absolute; top: 12px; left: 12px;
+  background: white; border-radius: 9999px; padding: 4px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.price-text { font-size: 13px; font-weight: 600; color: var(--uclaBlue); }
+.bookmark-btn {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(255,255,255,0.92); border-radius: 50%;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.card-content { padding: 14px 16px 16px; }
+.card-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.card-title { font-size: 15px; font-weight: 600; color: var(--darkSlate); line-height: 1.3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; flex: 1; }
+.card-address { display: flex; align-items: center; gap: 3px; margin-bottom: 3px; }
+.card-address-text { font-size: 12px; color: var(--slateGray); }
+.verified-row { display: flex; align-items: center; gap: 3px; margin-bottom: 2px; }
+.verified-text { font-size: 12px; color: var(--slateGray); }
+.tag-chips { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 10px; }
+.tag-chip {
+  background: var(--tagBg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px;
+  display: flex; align-items: center; gap: 5px;
+}
+.tag-chip-text { font-size: 11px; color: var(--darkSlate); font-weight: 400; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  padding: 10px 32px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 50;
+}
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.nav-label { font-size: 10px; font-weight: 500; }
+.nav-label.active { color: var(--uclaBlue); }
+.nav-label.inactive { color: var(--lightSlate); }
+
+/* ══════════ EXPLORATION A ══════════ */
+
+/* Slim header */
+.header-slim {
+  position: absolute; top: 44px; left: 0; right: 0; height: 54px;
+  background: rgba(248,250,252,0.96); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 60;
+}
+
+/* Floating search pill */
+.floating-search {
+  position: absolute; top: 86px; left: 14px; right: 14px;
+  background: white; border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.16), 0 1px 4px rgba(0,0,0,0.08);
+  display: flex; align-items: center; height: 46px;
+  padding: 0 6px 0 14px; z-index: 55;
+}
+.float-search-inner { flex: 1; display: flex; align-items: center; gap: 8px; }
+.float-placeholder { font-size: 14px; color: var(--lightSlate); }
+.float-filter-btn {
+  background: var(--uclaBlue); border-radius: 9999px;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Filter chips */
+.chips-row {
+  position: absolute; top: 136px; left: 0; right: 0;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg); z-index: 50;
+  overflow: hidden;
+}
+.chip {
+  background: white; border: 1px solid var(--border);
+  border-radius: 9999px; padding: 5px 12px;
+  font-size: 12px; font-weight: 500; color: var(--darkSlate);
+  white-space: nowrap; flex-shrink: 0;
+}
+.chip.active { background: var(--uclaBlue); border-color: var(--uclaBlue); color: white; }
+
+/* Alt main content */
+.main-alt {
+  position: absolute; top: 178px; left: 0; right: 0; bottom: 0;
+  background: var(--bg);
+}
+.main-alt-inner { padding: 10px 14px 120px; }
+.section-heading-sm { font-size: 14px; font-weight: 700; color: var(--darkSlate); margin-bottom: 10px; }
+
+/* 2-col grid */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* Compact card */
+.cc {
+  background: white; border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden;
+}
+.cc-img {
+  width: 100%; aspect-ratio: 1/1; position: relative; overflow: hidden;
+}
+.cc-price {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(15,23,42,0.78); border-radius: 9999px; padding: 3px 7px;
+}
+.cc-price-text { font-size: 11px; font-weight: 600; color: white; }
+.cc-bm {
+  position: absolute; top: 8px; right: 8px;
+  background: rgba(255,255,255,0.88); border-radius: 50%;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+}
+.cc-verified {
+  position: absolute; bottom: 8px; right: 8px;
+  background: var(--uclaBlue); border-radius: 50%;
+  width: 20px; height: 20px; border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+}
+.cc-body { padding: 7px 9px 9px; }
+.cc-title { font-size: 12px; font-weight: 600; color: var(--darkSlate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.cc-addr { font-size: 10px; color: var(--slateGray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; display: flex; align-items: center; gap: 2px; }
+.cc-tags { display: flex; gap: 4px; }
+.cc-tag {
+  background: var(--tagBg); border: 1px solid var(--border);
+  border-radius: 4px; padding: 3px 6px;
+  display: flex; align-items: center; gap: 3px;
+}
+.cc-tag-text { font-size: 9px; color: var(--darkSlate); }
+</style>
+</head>
+<body>
+
+<!-- ══════ FRAME 1: CURRENT ══════ -->
+<div class="phone-section">
+  <div class="phone-label">Current</div>
+  <div class="phone-frame">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="0.5" fill="#0f172a"/><rect x="4" y="2" width="3" height="10" rx="0.5" fill="#0f172a"/><rect x="8" y="0" width="3" height="12" rx="0.5" fill="#0f172a"/><rect x="12" y="0" width="3" height="12" rx="0.5" fill="#0f172a" opacity="0.3"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="#0f172a" stroke-width="1.2"/><rect x="13" y="5" width="2" height="4" rx="1" fill="#0f172a"/><rect x="2" y="4.5" width="9" height="5" rx="0.8" fill="#0f172a"/></svg>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-row1">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 3L2 7.5L10 12L18 7.5L10 3Z" fill="white"/>
+              <path d="M5 10V14C5 14 7 16 10 16C13 16 15 14 15 14V10" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <line x1="18" y1="7.5" x2="18" y2="12" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="18" cy="13" r="1.2" fill="white"/>
+            </svg>
+          </div>
+          <span class="logo-text">UCSubLA</span>
+        </div>
+        <div class="list-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>List</span>
+        </div>
+      </div>
+      <div class="search-bar">
+        <div class="search-input-area">
+          <div class="search-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#94a3b8" stroke-width="1.8"/><path d="M11 11L14 14" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <span class="search-placeholder">Search streets (e.g. Kelton)...</span>
+        </div>
+        <div class="filter-btn">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5H15M6 9H12M8 13H10" stroke="#64748b" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="main-content">
+      <div class="main-inner">
+        <h2 class="section-heading">Newest listings near campus</h2>
+        <div class="listings-stack">
+
+          <!-- Card 1 -->
+          <div class="listing-card">
+            <div class="card-image">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#9bb8d4 0%,#7298bc 40%,#5480a8 100%);"></div>
+              <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.18" viewBox="0 0 370 224" preserveAspectRatio="xMidYMid slice">
+                <rect x="30" y="60" width="90" height="110" rx="2" fill="white"/>
+                <rect x="42" y="74" width="28" height="36" fill="rgba(0,0,0,0.28)"/>
+                <rect x="78" y="74" width="28" height="36" fill="rgba(0,0,0,0.28)"/>
+                <rect x="42" y="118" width="28" height="30" fill="rgba(0,0,0,0.28)"/>
+                <rect x="78" y="118" width="28" height="30" fill="rgba(0,0,0,0.28)"/>
+                <rect x="160" y="40" width="160" height="130" rx="2" fill="white"/>
+                <rect x="174" y="56" width="50" height="64" fill="rgba(0,0,0,0.22)"/>
+                <rect x="232" y="56" width="50" height="64" fill="rgba(0,0,0,0.22)"/>
+                <rect x="194" y="140" width="40" height="30" rx="1" fill="rgba(0,0,0,0.2)"/>
+              </svg>
+              <div class="price-badge"><span class="price-text">$1,850/mo</span></div>
+              <div class="bookmark-btn">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3.5 2.5H11.5C11.78 2.5 12 2.72 12 3V13L7.5 10.5L3 13V3C3 2.72 3.22 2.5 3.5 2.5Z" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="card-title-row">
+                <span class="card-title">1BR in Westwood Village</span>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M4 2.5H14C14.28 2.5 14.5 2.72 14.5 3V16.5L9 13.5L3.5 16.5V3C3.5 2.72 3.72 2.5 4 2.5Z" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="card-address">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1C4.57 1 3 2.57 3 4.5C3 7 6.5 12 6.5 12C6.5 12 10 7 10 4.5C10 2.57 8.43 1 6.5 1Z" fill="#64748b"/><circle cx="6.5" cy="4.5" r="1.5" fill="white"/></svg>
+                <span class="card-address-text">Kelton Ave · 0.3 miles from campus</span>
+              </div>
+              <div class="verified-row">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1L7.8 3.2H10.4L8.6 4.8L9.4 7.4L6.5 5.9L3.6 7.4L4.4 4.8L2.6 3.2H5.2L6.5 1Z" fill="#64748b"/><path d="M4.5 6.5L5.8 7.8L8.5 5.2" stroke="white" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="verified-text">Verified UCLA Student</span>
+              </div>
+              <div class="tag-chips">
+                <div class="tag-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="6" width="14" height="7" rx="1" fill="#2d68c4"/><rect x="4" y="3.5" width="8" height="4" rx="1" fill="#2d68c4" opacity="0.65"/><rect x="0" y="12" width="16" height="2" rx="1" fill="#2d68c4" opacity="0.4"/></svg>
+                  <span class="tag-chip-text">Private room</span>
+                </div>
+                <div class="tag-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="9" width="12" height="3" rx="1" fill="#2d68c4"/><path d="M4 9V6.5C4 5.4 4.9 4.5 6 4.5C7.1 4.5 8 5.4 8 6.5V7" stroke="#2d68c4" stroke-width="1.4" stroke-linecap="round" fill="none"/><circle cx="11.5" cy="6" r="1.8" fill="#2d68c4" opacity="0.6"/></svg>
+                  <span class="tag-chip-text">Shared bath</span>
+                </div>
+                <div class="tag-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2.5" width="14" height="11" rx="1.5" stroke="#2d68c4" stroke-width="1.4" fill="none"/><path d="M1 6H15" stroke="#2d68c4" stroke-width="1.4"/><path d="M5 2.5V4.5M11 2.5V4.5" stroke="#2d68c4" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  <span class="tag-chip-text">Apr 1 – Jun 15</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="listing-card">
+            <div class="card-image">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#d4c8a8 0%,#c0b088 40%,#a8986a 100%);"></div>
+              <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.14" viewBox="0 0 370 224" preserveAspectRatio="xMidYMid slice">
+                <rect x="80" y="40" width="200" height="140" rx="3" fill="white"/>
+                <rect x="100" y="58" width="60" height="75" fill="rgba(0,0,0,0.28)"/>
+                <rect x="172" y="58" width="60" height="75" fill="rgba(0,0,0,0.28)"/>
+                <rect x="138" y="150" width="44" height="30" rx="2" fill="rgba(0,0,0,0.22)"/>
+              </svg>
+              <div class="price-badge"><span class="price-text">$1,400/mo</span></div>
+              <div class="bookmark-btn">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3.5 2.5H11.5C11.78 2.5 12 2.72 12 3V13L7.5 10.5L3 13V3C3 2.72 3.22 2.5 3.5 2.5Z" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="card-title-row">
+                <span class="card-title">Bright Studio near UCLA</span>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M4 2.5H14C14.28 2.5 14.5 2.72 14.5 3V16.5L9 13.5L3.5 16.5V3C3.5 2.72 3.72 2.5 4 2.5Z" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="card-address">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1C4.57 1 3 2.57 3 4.5C3 7 6.5 12 6.5 12C6.5 12 10 7 10 4.5C10 2.57 8.43 1 6.5 1Z" fill="#64748b"/><circle cx="6.5" cy="4.5" r="1.5" fill="white"/></svg>
+                <span class="card-address-text">Gayley Ave · 0.5 miles from campus</span>
+              </div>
+              <div class="tag-chips">
+                <div class="tag-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="6" width="14" height="7" rx="1" fill="#2d68c4"/><rect x="4" y="3.5" width="8" height="4" rx="1" fill="#2d68c4" opacity="0.65"/><rect x="0" y="12" width="16" height="2" rx="1" fill="#2d68c4" opacity="0.4"/></svg>
+                  <span class="tag-chip-text">Studio</span>
+                </div>
+                <div class="tag-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="9" width="12" height="3" rx="1" fill="#2d68c4"/><path d="M4 9V6.5C4 5.4 4.9 4.5 6 4.5C7.1 4.5 8 5.4 8 6.5V7" stroke="#2d68c4" stroke-width="1.4" stroke-linecap="round" fill="none"/><circle cx="11.5" cy="6" r="1.8" fill="#2d68c4" opacity="0.6"/></svg>
+                  <span class="tag-chip-text">Private bath</span>
+                </div>
+                <div class="tag-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2.5" width="14" height="11" rx="1.5" stroke="#2d68c4" stroke-width="1.4" fill="none"/><path d="M1 6H15" stroke="#2d68c4" stroke-width="1.4"/><path d="M5 2.5V4.5M11 2.5V4.5" stroke="#2d68c4" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  <span class="tag-chip-text">Mar 15 – Sep 1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 partial -->
+          <div class="listing-card" style="overflow:hidden">
+            <div class="card-image" style="height:64px">
+              <div style="width:100%;height:224px;background:linear-gradient(150deg,#aed0b0 0%,#88b888 40%,#68a068 100%);"></div>
+              <div class="price-badge"><span class="price-text">$1,200/mo</span></div>
+              <div class="bookmark-btn">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3.5 2.5H11.5C11.78 2.5 12 2.72 12 3V13L7.5 10.5L3 13V3C3 2.72 3.22 2.5 3.5 2.5Z" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <nav class="bottom-nav">
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V21H15V15H9V21H3V10.5Z" fill="#2d68c4"/></svg>
+        <span class="nav-label active">Home</span>
+      </div>
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 3H18C18.55 3 19 3.45 19 4V21L12 17L5 21V4C5 3.45 5.45 3 6 3Z" stroke="#94a3b8" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span class="nav-label inactive">Saved</span>
+      </div>
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4H20C20.55 4 21 4.45 21 5V16C21 16.55 20.55 17 20 17H7L4 20V5C4 4.45 4.45 4 5 4H4Z" stroke="#94a3b8" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span class="nav-label inactive">Chat</span>
+      </div>
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#94a3b8" stroke-width="1.8"/><path d="M4 20C4 17.79 7.58 16 12 16C16.42 16 20 17.79 20 20" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="nav-label inactive">Profile</span>
+      </div>
+    </nav>
+
+  </div><!-- /phone-frame -->
+</div><!-- /phone-section -->
+
+
+<!-- ══════ FRAME 2: EXPLORATION A ══════ -->
+<div class="phone-section">
+  <div class="phone-label">Exploration A</div>
+  <div class="phone-frame">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="0.5" fill="#0f172a"/><rect x="4" y="2" width="3" height="10" rx="0.5" fill="#0f172a"/><rect x="8" y="0" width="3" height="12" rx="0.5" fill="#0f172a"/><rect x="12" y="0" width="3" height="12" rx="0.5" fill="#0f172a" opacity="0.3"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="#0f172a" stroke-width="1.2"/><rect x="13" y="5" width="2" height="4" rx="1" fill="#0f172a"/><rect x="2" y="4.5" width="9" height="5" rx="0.8" fill="#0f172a"/></svg>
+      </div>
+    </div>
+
+    <!-- Slim header -->
+    <header class="header-slim">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3L2 7.5L10 12L18 7.5L10 3Z" fill="white"/>
+            <path d="M5 10V14C5 14 7 16 10 16C13 16 15 14 15 14V10" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <line x1="18" y1="7.5" x2="18" y2="12" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="18" cy="13" r="1.2" fill="white"/>
+          </svg>
+        </div>
+        <span class="logo-text">UCSubLA</span>
+      </div>
+      <div class="list-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>List</span>
+      </div>
+    </header>
+
+    <!-- Floating search pill -->
+    <div class="floating-search">
+      <div class="float-search-inner">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#94a3b8" stroke-width="1.8"/><path d="M11 11L14 14" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="float-placeholder">Search streets (e.g. Kelton)...</span>
+      </div>
+      <div class="float-filter-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4H12M4 7H10M6 10H8" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <!-- Filter chips -->
+    <div class="chips-row">
+      <div class="chip active">Near campus</div>
+      <div class="chip">Spring</div>
+      <div class="chip">Summer</div>
+      <div class="chip">Fall</div>
+      <div class="chip">Private</div>
+      <div class="chip">Shared</div>
+      <div class="chip">≤$1500</div>
+    </div>
+
+    <!-- Main grid content -->
+    <div class="main-alt">
+      <div class="main-alt-inner">
+        <h2 class="section-heading-sm">Newest listings near campus</h2>
+        <div class="grid2">
+
+          <!-- Card A1 -->
+          <div class="cc">
+            <div class="cc-img">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#9bb8d4 0%,#7298bc 50%,#5480a8 100%);"></div>
+              <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.16" viewBox="0 0 174 174" preserveAspectRatio="xMidYMid slice">
+                <rect x="12" y="48" width="60" height="80" rx="2" fill="white"/>
+                <rect x="20" y="58" width="18" height="24" fill="rgba(0,0,0,0.28)"/>
+                <rect x="44" y="58" width="18" height="24" fill="rgba(0,0,0,0.28)"/>
+                <rect x="20" y="88" width="18" height="20" fill="rgba(0,0,0,0.28)"/>
+                <rect x="90" y="34" width="74" height="90" rx="2" fill="white"/>
+                <rect x="100" y="46" width="22" height="30" fill="rgba(0,0,0,0.22)"/>
+                <rect x="130" y="46" width="22" height="30" fill="rgba(0,0,0,0.22)"/>
+              </svg>
+              <div class="cc-price"><span class="cc-price-text">$1,850/mo</span></div>
+              <div class="cc-bm"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 1.5H8.5C8.78 1.5 9 1.72 9 2V9.5L5.5 7.8L2 9.5V2C2 1.72 2.22 1.5 2.5 1.5Z" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+              <div class="cc-verified"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4 7L8 3" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cc-body">
+              <div class="cc-title">1BR Westwood Village</div>
+              <div class="cc-addr">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M4.5 0.5C3.12 0.5 2 1.62 2 3C2 4.75 4.5 8.5 4.5 8.5C4.5 8.5 7 4.75 7 3C7 1.62 5.88 0.5 4.5 0.5Z" fill="#64748b"/><circle cx="4.5" cy="3" r="1.1" fill="white"/></svg>
+                <span>Kelton Ave · 0.3mi</span>
+              </div>
+              <div class="cc-tags">
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="3.5" width="8" height="4" rx="0.8" fill="#2d68c4"/><rect x="2" y="2" width="5" height="2.5" rx="0.5" fill="#2d68c4" opacity="0.65"/></svg><span class="cc-tag-text">Private</span></div>
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="1.5" width="8" height="6" rx="0.8" stroke="#2d68c4" stroke-width="0.9" fill="none"/><path d="M0.5 3.5H8.5" stroke="#2d68c4" stroke-width="0.9"/></svg><span class="cc-tag-text">Apr–Jun</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card A2 -->
+          <div class="cc">
+            <div class="cc-img">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#d4c8a8 0%,#c0b080 50%,#a89860 100%);"></div>
+              <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.13" viewBox="0 0 174 174" preserveAspectRatio="xMidYMid slice">
+                <rect x="22" y="30" width="130" height="110" rx="3" fill="white"/>
+                <rect x="36" y="46" width="44" height="56" fill="rgba(0,0,0,0.28)"/>
+                <rect x="90" y="46" width="44" height="56" fill="rgba(0,0,0,0.28)"/>
+                <rect x="66" y="118" width="36" height="22" rx="2" fill="rgba(0,0,0,0.2)"/>
+              </svg>
+              <div class="cc-price"><span class="cc-price-text">$1,400/mo</span></div>
+              <div class="cc-bm"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 1.5H8.5C8.78 1.5 9 1.72 9 2V9.5L5.5 7.8L2 9.5V2C2 1.72 2.22 1.5 2.5 1.5Z" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cc-body">
+              <div class="cc-title">Bright Studio UCLA</div>
+              <div class="cc-addr">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M4.5 0.5C3.12 0.5 2 1.62 2 3C2 4.75 4.5 8.5 4.5 8.5C4.5 8.5 7 4.75 7 3C7 1.62 5.88 0.5 4.5 0.5Z" fill="#64748b"/><circle cx="4.5" cy="3" r="1.1" fill="white"/></svg>
+                <span>Gayley Ave · 0.5mi</span>
+              </div>
+              <div class="cc-tags">
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="3.5" width="8" height="4" rx="0.8" fill="#2d68c4"/><rect x="2" y="2" width="5" height="2.5" rx="0.5" fill="#2d68c4" opacity="0.65"/></svg><span class="cc-tag-text">Studio</span></div>
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="1.5" width="8" height="6" rx="0.8" stroke="#2d68c4" stroke-width="0.9" fill="none"/><path d="M0.5 3.5H8.5" stroke="#2d68c4" stroke-width="0.9"/></svg><span class="cc-tag-text">Mar–Sep</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card A3 -->
+          <div class="cc">
+            <div class="cc-img">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#aed0b0 0%,#80b880 50%,#60a060 100%);"></div>
+              <div class="cc-price"><span class="cc-price-text">$1,200/mo</span></div>
+              <div class="cc-bm"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 1.5H8.5C8.78 1.5 9 1.72 9 2V9.5L5.5 7.8L2 9.5V2C2 1.72 2.22 1.5 2.5 1.5Z" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cc-body">
+              <div class="cc-title">Shared 2-bed apt</div>
+              <div class="cc-addr">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M4.5 0.5C3.12 0.5 2 1.62 2 3C2 4.75 4.5 8.5 4.5 8.5C4.5 8.5 7 4.75 7 3C7 1.62 5.88 0.5 4.5 0.5Z" fill="#64748b"/><circle cx="4.5" cy="3" r="1.1" fill="white"/></svg>
+                <span>Levering Ave · 0.7mi</span>
+              </div>
+              <div class="cc-tags">
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="3.5" width="8" height="4" rx="0.8" fill="#2d68c4"/><rect x="2" y="2" width="5" height="2.5" rx="0.5" fill="#2d68c4" opacity="0.65"/></svg><span class="cc-tag-text">Shared</span></div>
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="1.5" width="8" height="6" rx="0.8" stroke="#2d68c4" stroke-width="0.9" fill="none"/><path d="M0.5 3.5H8.5" stroke="#2d68c4" stroke-width="0.9"/></svg><span class="cc-tag-text">Apr–Aug</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card A4 -->
+          <div class="cc">
+            <div class="cc-img">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#e0d0b8 0%,#ccb898 50%,#b8a078 100%);"></div>
+              <div class="cc-price"><span class="cc-price-text">$1,650/mo</span></div>
+              <div class="cc-bm"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 1.5H8.5C8.78 1.5 9 1.72 9 2V9.5L5.5 7.8L2 9.5V2C2 1.72 2.22 1.5 2.5 1.5Z" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+              <div class="cc-verified"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5L4 7L8 3" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cc-body">
+              <div class="cc-title">Cozy single Bruin Walk</div>
+              <div class="cc-addr">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M4.5 0.5C3.12 0.5 2 1.62 2 3C2 4.75 4.5 8.5 4.5 8.5C4.5 8.5 7 4.75 7 3C7 1.62 5.88 0.5 4.5 0.5Z" fill="#64748b"/><circle cx="4.5" cy="3" r="1.1" fill="white"/></svg>
+                <span>Strathmore Dr · 0.4mi</span>
+              </div>
+              <div class="cc-tags">
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="3.5" width="8" height="4" rx="0.8" fill="#2d68c4"/><rect x="2" y="2" width="5" height="2.5" rx="0.5" fill="#2d68c4" opacity="0.65"/></svg><span class="cc-tag-text">Private</span></div>
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="1.5" width="8" height="6" rx="0.8" stroke="#2d68c4" stroke-width="0.9" fill="none"/><path d="M0.5 3.5H8.5" stroke="#2d68c4" stroke-width="0.9"/></svg><span class="cc-tag-text">Spring Q</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card A5 -->
+          <div class="cc">
+            <div class="cc-img">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#c8b8e0 0%,#a890cc 50%,#8870b0 100%);"></div>
+              <div class="cc-price"><span class="cc-price-text">$1,100/mo</span></div>
+              <div class="cc-bm"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 1.5H8.5C8.78 1.5 9 1.72 9 2V9.5L5.5 7.8L2 9.5V2C2 1.72 2.22 1.5 2.5 1.5Z" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cc-body">
+              <div class="cc-title">Room in 4BR house</div>
+              <div class="cc-addr">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M4.5 0.5C3.12 0.5 2 1.62 2 3C2 4.75 4.5 8.5 4.5 8.5C4.5 8.5 7 4.75 7 3C7 1.62 5.88 0.5 4.5 0.5Z" fill="#64748b"/><circle cx="4.5" cy="3" r="1.1" fill="white"/></svg>
+                <span>Landfair Ave · 0.8mi</span>
+              </div>
+              <div class="cc-tags">
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="3.5" width="8" height="4" rx="0.8" fill="#2d68c4"/><rect x="2" y="2" width="5" height="2.5" rx="0.5" fill="#2d68c4" opacity="0.65"/></svg><span class="cc-tag-text">Shared</span></div>
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="1.5" width="8" height="6" rx="0.8" stroke="#2d68c4" stroke-width="0.9" fill="none"/><path d="M0.5 3.5H8.5" stroke="#2d68c4" stroke-width="0.9"/></svg><span class="cc-tag-text">Jun–Aug</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card A6 -->
+          <div class="cc">
+            <div class="cc-img">
+              <div style="width:100%;height:100%;background:linear-gradient(150deg,#a8d4d0 0%,#80bab8 50%,#60a0a0 100%);"></div>
+              <div class="cc-price"><span class="cc-price-text">$1,450/mo</span></div>
+              <div class="cc-bm"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 1.5H8.5C8.78 1.5 9 1.72 9 2V9.5L5.5 7.8L2 9.5V2C2 1.72 2.22 1.5 2.5 1.5Z" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cc-body">
+              <div class="cc-title">Studio sublease</div>
+              <div class="cc-addr">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M4.5 0.5C3.12 0.5 2 1.62 2 3C2 4.75 4.5 8.5 4.5 8.5C4.5 8.5 7 4.75 7 3C7 1.62 5.88 0.5 4.5 0.5Z" fill="#64748b"/><circle cx="4.5" cy="3" r="1.1" fill="white"/></svg>
+                <span>Midvale Ave · 0.6mi</span>
+              </div>
+              <div class="cc-tags">
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="3.5" width="8" height="4" rx="0.8" fill="#2d68c4"/><rect x="2" y="2" width="5" height="2.5" rx="0.5" fill="#2d68c4" opacity="0.65"/></svg><span class="cc-tag-text">Studio</span></div>
+                <div class="cc-tag"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="1.5" width="8" height="6" rx="0.8" stroke="#2d68c4" stroke-width="0.9" fill="none"/><path d="M0.5 3.5H8.5" stroke="#2d68c4" stroke-width="0.9"/></svg><span class="cc-tag-text">Apr–Jul</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /grid2 -->
+      </div>
+    </div><!-- /main-alt -->
+
+    <!-- Bottom nav -->
+    <nav class="bottom-nav">
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V21H15V15H9V21H3V10.5Z" fill="#2d68c4"/></svg>
+        <span class="nav-label active">Home</span>
+      </div>
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 3H18C18.55 3 19 3.45 19 4V21L12 17L5 21V4C5 3.45 5.45 3 6 3Z" stroke="#94a3b8" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span class="nav-label inactive">Saved</span>
+      </div>
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4H20C20.55 4 21 4.45 21 5V16C21 16.55 20.55 17 20 17H7L4 20V5C4 4.45 4.45 4 5 4H4Z" stroke="#94a3b8" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span class="nav-label inactive">Chat</span>
+      </div>
+      <div class="nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#94a3b8" stroke-width="1.8"/><path d="M4 20C4 17.79 7.58 16 12 16C16.42 16 20 17.79 20 20" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="nav-label inactive">Profile</span>
+      </div>
+    </nav>
+
+  </div><!-- /phone-frame -->
+</div><!-- /phone-section -->
+
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

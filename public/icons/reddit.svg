@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Orange background -->
+  <circle cx="50" cy="50" r="50" fill="#FF4500"/>
+  <!-- Head / body -->
+  <circle cx="50" cy="56" r="29" fill="white"/>
+  <!-- Left ear -->
+  <circle cx="22" cy="50" r="9" fill="white"/>
+  <!-- Right ear -->
+  <circle cx="78" cy="50" r="9" fill="white"/>
+  <!-- Antenna ball -->
+  <circle cx="66" cy="24" r="7" fill="white"/>
+  <!-- Antenna stem -->
+  <line x1="57" y1="39" x2="63" y2="29" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Left eye (orange circle + white pupil) -->
+  <circle cx="40" cy="53" r="7.5" fill="#FF4500"/>
+  <circle cx="40" cy="53" r="3.2" fill="white"/>
+  <!-- Right eye -->
+  <circle cx="60" cy="53" r="7.5" fill="#FF4500"/>
+  <circle cx="60" cy="53" r="3.2" fill="white"/>
+  <!-- Smile -->
+  <path d="M40 67 Q50 77 60 67" stroke="#FF4500" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>

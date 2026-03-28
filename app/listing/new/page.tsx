@@ -510,7 +510,7 @@ export default function CreateListingPage() {
                   key={item.key}
                   type="button"
                   onClick={() => toggleAmenity(item.key as keyof Amenities)}
-                  className={`px-4 py-2 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     formData.amenities[item.key as keyof Amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'
@@ -537,7 +537,7 @@ export default function CreateListingPage() {
                   key={item.key}
                   type="button"
                   onClick={() => toggleAmenity(item.key as keyof Amenities)}
-                  className={`px-4 py-2 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     formData.amenities[item.key as keyof Amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'
@@ -563,7 +563,7 @@ export default function CreateListingPage() {
                   key={item.key}
                   type="button"
                   onClick={() => toggleAmenity(item.key as keyof Amenities)}
-                  className={`px-4 py-2 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     formData.amenities[item.key as keyof Amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'
@@ -590,7 +590,7 @@ export default function CreateListingPage() {
                       amenities: { ...formData.amenities, parking },
                     });
                   }}
-                  className={`px-4 py-2 rounded-xl border transition-colors ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     formData.amenities.parking === option.value
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-gray-200 text-slateGray'

@@ -53,7 +53,7 @@ export default function ListingDetailsPage() {
     { key: 'laundryOnSite', label: 'On-Site Laundry', show: listing.amenities.laundryOnSite },
     { key: 'laundryInUnit', label: 'In-Unit Laundry', show: listing.amenities.laundryInUnit },
     { key: 'fitnessCenter', label: 'Fitness Center', show: listing.amenities.fitnessCenter },
-    { key: 'parking', label: listing.amenities.parking ? `${listing.amenities.parking.charAt(0).toUpperCase() + listing.amenities.parking.slice(1)} Parking` : '', show: !!listing.amenities.parking },
+    { key: 'parking', label: listing.amenities.parking ? `${listing.amenities.parking.charAt(0).toUpperCase() + listing.amenities.parking.slice(1)} Parking` : '', show: !!listing.amenities.parking && listing.amenities.parking !== 'street' },
   ].filter((item) => item.show);
 
   return (
