@@ -94,21 +94,23 @@ export default function MessagesPage() {
                       onClick={() => setSelectedConversationId(conversation.id)}
                       className="w-full card shadow-card p-4 hover:bg-gray-50 transition-colors text-left"
                     >
-                      <div className="flex gap-3">
-                        {/* Avatar with unread dot */}
-                        <div className="relative w-12 h-12 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
+                      <div className="flex items-center gap-3">
+                        {/* Unread indicator lane — fixed width keeps avatar column aligned */}
+                        <div className="w-2 flex-shrink-0 flex items-center justify-center">
+                          {hasUnread && <span className="w-2 h-2 rounded-full bg-uclaBlue" />}
+                        </div>
+
+                        {/* Avatar */}
+                        <div className="w-12 h-12 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
                           <span className="text-white font-medium text-body">
                             {getInitials('Sarah Johnson')}
                           </span>
-                          {hasUnread && (
-                            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-white border-[2.5px] border-uclaBlue" />
-                          )}
                         </div>
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h3 className={`text-h3 truncate ${hasUnread ? 'font-semibold text-darkSlate' : 'font-normal text-darkSlate'}`}>
+                          <div className="flex items-start justify-between gap-2 mb-0.5">
+                            <h3 className="text-h3 font-semibold text-darkSlate truncate">
                               {listing?.address || 'Unknown Listing'}
                             </h3>
                             <span className="text-small text-slateGray flex-shrink-0">
@@ -116,11 +118,9 @@ export default function MessagesPage() {
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-between gap-2">
-                            <p className={`text-body truncate ${hasUnread ? 'font-medium text-darkSlate' : 'text-slateGray'}`}>
-                              {conversation.lastMessage.text}
-                            </p>
-                          </div>
+                          <p className="text-small text-slateGray truncate">
+                            {conversation.lastMessage.text}
+                          </p>
                         </div>
                       </div>
                     </button>
@@ -196,7 +196,7 @@ export default function MessagesPage() {
         {/* Date separator */}
         <div className="flex items-center gap-3 mb-2">
           <div className="flex-1 h-px bg-borderLight" />
-          <span className="text-[11px] text-lightSlate font-medium tracking-wide uppercase">February 12</span>
+          <span className="text-[11px] text-lightSlate font-medium tracking-wide">February 12</span>
           <div className="flex-1 h-px bg-borderLight" />
         </div>
 
@@ -211,8 +211,8 @@ export default function MessagesPage() {
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
                   isSentByMe
-                    ? 'bg-uclaBlue text-white shadow-[0_2px_6px_rgba(37,99,235,0.28)]'
-                    : 'bg-white text-darkSlate border border-borderLight shadow-sm'
+                    ? 'bg-uclaBlue text-white'
+                    : 'bg-white text-darkSlate'
                 }`}
               >
                 <p className="text-body">{message.text}</p>
