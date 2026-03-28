@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { BookmarkProvider } from "@/lib/BookmarkContext";
 
 export const metadata: Metadata = {
   title: "BruinLease - UCLA Subleasing",
@@ -28,7 +29,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#F8FAFC" />
       </head>
       <body className="antialiased touch-pan-y">
-        {children}
+        <BookmarkProvider>
+          {children}
+        </BookmarkProvider>
       </body>
     </html>
   );

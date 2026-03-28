@@ -46,7 +46,7 @@ export default function MessagesPage() {
   // Conversation List View
   if (!selectedConversationId) {
     return (
-      <div className="min-h-screen pb-20 bg-background app-container">
+      <div className="min-h-screen pb-20 bg-background app-container page-fade-in">
         {/* Header */}
         <div className="blurHeader app-container">
           <div className="blurHeaderContent">
@@ -133,7 +133,7 @@ export default function MessagesPage() {
   const listerVerified = true;
 
   return (
-    <div className="min-h-screen bg-background app-container">
+    <div className="min-h-screen bg-background app-container page-fade-in">
       {/* Chat Header */}
       <div className="blurHeaderWithNav app-container">
         <div className="blurHeaderWithNavContent">

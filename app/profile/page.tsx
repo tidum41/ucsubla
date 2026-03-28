@@ -6,9 +6,11 @@ import Icon from '@/components/common/Icon';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockUser, mockListings } from '@/lib/mockData';
 import { getInitials } from '@/lib/utils';
+import { useBookmarks } from '@/lib/BookmarkContext';
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { bookmarkedIds } = useBookmarks();
   const [displayName, setDisplayName] = useState(mockUser.name);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -40,7 +42,7 @@ export default function ProfilePage() {
     {
       icon: 'bookmark',
       label: 'Saved',
-      count: mockUser.bookmarks.length,
+      count: bookmarkedIds.length,
       onClick: () => router.push('/bookmarks'),
     },
     {
@@ -57,7 +59,7 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen pb-20 bg-background app-container">
+    <div className="min-h-screen pb-20 bg-background app-container page-fade-in">
       {/* Toast */}
       {toast && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-darkSlate text-white text-small font-medium px-4 py-2 rounded-full shadow-elevated whitespace-nowrap">

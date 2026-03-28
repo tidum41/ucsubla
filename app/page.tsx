@@ -5,12 +5,13 @@ import Header from '@/components/layout/Header';
 import BottomNav from '@/components/layout/BottomNav';
 import ListingCard from '@/components/listings/ListingCard';
 import FilterModal from '@/components/filters/FilterModal';
-import { mockListings, mockUser } from '@/lib/mockData';
+import { mockListings } from '@/lib/mockData';
+import { useBookmarks } from '@/lib/BookmarkContext';
 import { searchListings, filterListings } from '@/lib/utils';
 import type { FilterState } from '@/lib/types';
 
 export default function Home() {
-  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(mockUser.bookmarks);
+  const { bookmarkedIds, toggleBookmark } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [allListings, setAllListings] = useState(mockListings);
@@ -43,16 +44,6 @@ export default function Home() {
     setAllListings([...mockListings, ...userListings]);
   }, []);
 
-  const handleBookmarkToggle = (listingId: string) => {
-    setBookmarkedIds(prev => {
-      if (prev.includes(listingId)) {
-        return prev.filter(id => id !== listingId);
-      } else {
-        return [...prev, listingId];
-      }
-    });
-  };
-
   const handleFilterClick = () => {
     setIsFilterOpen(true);
   };
@@ -80,7 +71,7 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen pb-28 bg-background app-container">
+    <div className="min-h-screen pb-28 bg-background app-container page-fade-in">
       <Header
         onFilterClick={handleFilterClick}
         onSearchChange={handleSearchChange}
@@ -103,7 +94,7 @@ export default function Home() {
                 key={listing.id}
                 listing={listing}
                 isBookmarked={bookmarkedIds.includes(listing.id)}
-                onBookmarkToggle={handleBookmarkToggle}
+                onBookmarkToggle={toggleBookmark}
               />
             ))
           ) : (

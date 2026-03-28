@@ -1,30 +1,20 @@
 'use client';
 
-import { useState } from 'react';
 import Icon from '@/components/common/Icon';
 import BottomNav from '@/components/layout/BottomNav';
 import ListingCard from '@/components/listings/ListingCard';
-import { mockListings, mockUser } from '@/lib/mockData';
+import { mockListings } from '@/lib/mockData';
+import { useBookmarks } from '@/lib/BookmarkContext';
 
 export default function BookmarksPage() {
-  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(mockUser.bookmarks);
+  const { bookmarkedIds, toggleBookmark } = useBookmarks();
 
   const bookmarkedListings = mockListings.filter((listing) =>
     bookmarkedIds.includes(listing.id)
   );
 
-  const handleBookmarkToggle = (listingId: string) => {
-    setBookmarkedIds((prev) => {
-      if (prev.includes(listingId)) {
-        return prev.filter((id) => id !== listingId);
-      } else {
-        return [...prev, listingId];
-      }
-    });
-  };
-
   return (
-    <div className="min-h-screen pb-28 bg-background app-container">
+    <div className="min-h-screen pb-28 bg-background app-container page-fade-in">
       {/* Header */}
       <div className="blurHeader app-container">
         <div className="blurHeaderContent">
@@ -44,7 +34,7 @@ export default function BookmarksPage() {
                 key={listing.id}
                 listing={listing}
                 isBookmarked={bookmarkedIds.includes(listing.id)}
-                onBookmarkToggle={handleBookmarkToggle}
+                onBookmarkToggle={toggleBookmark}
               />
             ))}
           </div>
