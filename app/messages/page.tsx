@@ -46,84 +46,85 @@ export default function MessagesPage() {
   // Conversation List View
   if (!selectedConversationId) {
     return (
-      <div className="min-h-screen pb-20 bg-background app-container page-fade-in">
-        {/* Header */}
-        <div className="blurHeader app-container">
-          <div className="blurHeaderContent">
-            <h1 className="text-h1 text-darkSlate">Chat</h1>
+      <>
+        <div className="min-h-screen pb-20 bg-background app-container page-fade-in">
+          {/* Header */}
+          <div className="blurHeader app-container">
+            <div className="blurHeaderContent">
+              <h1 className="text-h1 text-darkSlate">Chat</h1>
+            </div>
           </div>
-        </div>
 
-        {/* Spacer for fixed nav */}
-        <div className="h-[52px]" style={{ marginTop: 'env(safe-area-inset-top)' }} />
+          {/* Spacer for fixed nav */}
+          <div className="h-[52px]" style={{ marginTop: 'env(safe-area-inset-top)' }} />
 
-        {/* Conversations */}
-        <div className="px-5 pt-4">
-          {mockConversations.length > 0 ? (
-            <div className="space-y-2">
-              {mockConversations.map((conversation) => {
-                const listing = mockListings.find(
-                  (l) => l.id === conversation.listingId
-                );
+          {/* Conversations */}
+          <div className="px-5 pt-4">
+            {mockConversations.length > 0 ? (
+              <div className="space-y-2">
+                {mockConversations.map((conversation) => {
+                  const listing = mockListings.find(
+                    (l) => l.id === conversation.listingId
+                  );
 
-                return (
-                  <button
-                    key={conversation.id}
-                    onClick={() => setSelectedConversationId(conversation.id)}
-                    className="w-full card shadow-card p-4 hover:bg-gray-50 transition-colors text-left"
-                  >
-                    <div className="flex gap-3">
-                      {/* Avatar */}
-                      <div className="w-12 h-12 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-medium text-body">
-                          {getInitials('Sarah Johnson')}
-                        </span>
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <h3 className="text-h3 text-darkSlate truncate">
-                            {listing?.address || 'Unknown Listing'}
-                          </h3>
-                          <span className="text-small text-slateGray flex-shrink-0">
-                            {formatTimestamp(conversation.lastMessage.timestamp)}
+                  return (
+                    <button
+                      key={conversation.id}
+                      onClick={() => setSelectedConversationId(conversation.id)}
+                      className="w-full card shadow-card p-4 hover:bg-gray-50 transition-colors text-left"
+                    >
+                      <div className="flex gap-3">
+                        {/* Avatar */}
+                        <div className="w-12 h-12 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
+                          <span className="text-white font-medium text-body">
+                            {getInitials('Sarah Johnson')}
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-body text-slateGray truncate">
-                            {conversation.lastMessage.text}
-                          </p>
-                          {conversation.unreadCount > 0 && (
-                            <div className="bg-uclaBlue rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
-                              <span className="text-white text-xs font-medium">
-                                {conversation.unreadCount}
-                              </span>
-                            </div>
-                          )}
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <h3 className="text-h3 text-darkSlate truncate">
+                              {listing?.address || 'Unknown Listing'}
+                            </h3>
+                            <span className="text-small text-slateGray flex-shrink-0">
+                              {formatTimestamp(conversation.lastMessage.timestamp)}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-body text-slateGray truncate">
+                              {conversation.lastMessage.text}
+                            </p>
+                            {conversation.unreadCount > 0 && (
+                              <div className="bg-uclaBlue rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center flex-shrink-0 shadow-[0_1px_4px_rgba(37,99,235,0.45)] ring-[1.5px] ring-white">
+                                <span className="text-white text-[11px] font-semibold leading-none">
+                                  {conversation.unreadCount}
+                                </span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-24 text-center px-8">
-              <div className="w-16 h-16 rounded-full bg-uclaBlue/10 flex items-center justify-center mb-4">
-                <Icon name="message" size={28} className="text-uclaBlue" />
+                    </button>
+                  );
+                })}
               </div>
-              <h3 className="text-h2 text-darkSlate mb-1">No messages yet</h3>
-              <p className="text-body text-slateGray">
-                Start a conversation by tapping Message on any listing
-              </p>
-            </div>
-          )}
+            ) : (
+              <div className="flex flex-col items-center justify-center py-24 text-center px-8">
+                <div className="w-16 h-16 rounded-full bg-uclaBlue/10 flex items-center justify-center mb-4">
+                  <Icon name="message" size={28} className="text-uclaBlue" />
+                </div>
+                <h3 className="text-h2 text-darkSlate mb-1">No messages yet</h3>
+                <p className="text-body text-slateGray">
+                  Start a conversation by tapping Message on any listing
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-
         <BottomNav />
-      </div>
+      </>
     );
   }
 
@@ -133,6 +134,7 @@ export default function MessagesPage() {
   const listerVerified = true;
 
   return (
+    <>
     <div className="min-h-screen bg-background app-container page-fade-in">
       {/* Chat Header */}
       <div className="blurHeaderWithNav app-container">
@@ -229,7 +231,8 @@ export default function MessagesPage() {
         </div>
       </div>
 
-      <BottomNav />
     </div>
+    <BottomNav />
+    </>
   );
 }

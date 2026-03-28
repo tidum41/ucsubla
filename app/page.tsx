@@ -71,6 +71,7 @@ export default function Home() {
   );
 
   return (
+    <>
     <div className="min-h-screen pb-28 bg-background app-container page-fade-in">
       <Header
         onFilterClick={handleFilterClick}
@@ -107,8 +108,6 @@ export default function Home() {
         </div>
       </main>
 
-      <BottomNav />
-
       {/* Filter Modal */}
       <FilterModal
         isOpen={isFilterOpen}
@@ -118,5 +117,7 @@ export default function Home() {
         resultCount={displayedListings.length}
       />
     </div>
+    <BottomNav />
+    </>
   );
 }

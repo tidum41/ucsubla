@@ -14,6 +14,7 @@ export default function BookmarksPage() {
   );
 
   return (
+    <>
     <div className="min-h-screen pb-28 bg-background app-container page-fade-in">
       {/* Header */}
       <div className="blurHeader app-container">
@@ -49,7 +50,8 @@ export default function BookmarksPage() {
         )}
       </main>
 
-      <BottomNav />
     </div>
+    <BottomNav />
+    </>
   );
 }

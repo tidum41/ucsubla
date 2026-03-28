@@ -59,6 +59,7 @@ export default function ProfilePage() {
   ];
 
   return (
+    <>
     <div className="min-h-screen pb-20 bg-background app-container page-fade-in">
       {/* Toast */}
       {toast && (
@@ -154,7 +155,8 @@ export default function ProfilePage() {
         </button>
       </div>
 
-      <BottomNav />
     </div>
+    <BottomNav />
+    </>
   );
 }
