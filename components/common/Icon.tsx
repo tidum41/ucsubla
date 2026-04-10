@@ -20,6 +20,7 @@ import {
   Armchair,
   ChevronLeft,
   ChevronRight,
+  Send,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -46,6 +47,7 @@ const iconMap: Record<string, LucideIcon> = {
   'chair.fill': Armchair,
   'chevron.left': ChevronLeft,
   'chevron.right': ChevronRight,
+  paperplane: Send,
 };
 
 export interface IconProps {

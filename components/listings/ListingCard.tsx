@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Icon from '../common/Icon';
 import { formatPrice, formatDateRange } from '@/lib/utils';
@@ -11,19 +11,34 @@ interface ListingCardProps {
   listing: Listing;
   isBookmarked: boolean;
   onBookmarkToggle: (listingId: string) => void;
+  index?: number;
 }
 
-export default function ListingCard({ listing, isBookmarked, onBookmarkToggle }: ListingCardProps) {
+export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, index = 0 }: ListingCardProps) {
+  const router = useRouter();
   const [imageError, setImageError] = useState(false);
+  const [bookmarkAnim, setBookmarkAnim] = useState(false);
+
+  const handleCardClick = () => {
+    router.push(`/listing/${listing.id}`);
+  };
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
-    e.preventDefault();
     e.stopPropagation();
     onBookmarkToggle(listing.id);
+    setBookmarkAnim(true);
+    setTimeout(() => setBookmarkAnim(false), 450);
   };
 
   return (
-    <Link href={`/listing/${listing.id}`} className="block">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={handleCardClick}
+      onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
+      className="block animate-cardFadeUp active:scale-[0.98] transition-transform duration-100 cursor-pointer"
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
       <div className="card shadow-minimal hover:shadow-card transition-shadow duration-200">
         {/* Image */}
         <div className="relative h-56 bg-gray-200 overflow-hidden">
@@ -58,7 +73,7 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle }:
             </h3>
             <button
               onClick={handleBookmarkClick}
-              className="flex-shrink-0 p-0 hover:scale-110 transition-transform"
+              className={`flex-shrink-0 p-0 transition-transform ${bookmarkAnim ? 'animate-bookmarkPop' : ''}`}
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
               <Icon
@@ -88,23 +103,18 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle }:
 
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2 pt-3">
-            {/* Room type */}
             <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
               <Icon name="bed.double.fill" size={18} className="text-uclaBlue" />
               <span className="text-tiny text-darkSlate capitalize font-normal">
                 {listing.roomType === 'triple+' ? 'Triple+' : listing.roomType}
               </span>
             </div>
-
-            {/* Bathroom type */}
             <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
               <Icon name="shower.fill" size={18} className="text-uclaBlue" />
               <span className="text-tiny text-darkSlate capitalize font-normal">
                 {listing.bathroomType}
               </span>
             </div>
-
-            {/* Dates */}
             <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
               <Icon name="calendar" size={18} className="text-uclaBlue" />
               <span className="text-tiny text-darkSlate font-normal">
@@ -114,6 +124,6 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle }:
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

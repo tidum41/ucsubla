@@ -116,12 +116,13 @@ export default function Home() {
           {!isLoaded ? (
             [0, 1, 2].map(i => <ListingSkeleton key={i} />)
           ) : displayedListings.length > 0 ? (
-            displayedListings.map(listing => (
+            displayedListings.map((listing, i) => (
               <ListingCard
                 key={listing.id}
                 listing={listing}
                 isBookmarked={bookmarkedIds.includes(listing.id)}
                 onBookmarkToggle={toggleBookmark}
+                index={i}
               />
             ))
           ) : (

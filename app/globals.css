@@ -266,4 +266,58 @@
     animation: shimmer 1.4s ease-in-out infinite;
     border-radius: 6px;
   }
+
+  /* Card staggered entrance */
+  @keyframes cardFadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-cardFadeUp {
+    animation: cardFadeUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Bookmark pop */
+  @keyframes bookmarkPop {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.4); }
+    60%  { transform: scale(0.88); }
+    80%  { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+
+  .animate-bookmarkPop {
+    animation: bookmarkPop 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Save filters checkmark pop */
+  @keyframes checkPop {
+    0%   { transform: scale(0.5); opacity: 0; }
+    60%  { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .animate-checkPop {
+    animation: checkPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* View transitions — image morphs from card to detail */
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root) {
+      animation: none;
+    }
+    ::view-transition-new(root) {
+      animation: none;
+    }
+    ::view-transition-group(listing-hero) {
+      animation-duration: 0.35s;
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  }
 }

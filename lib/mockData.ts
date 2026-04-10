@@ -3,17 +3,17 @@ import type { Listing, Review, User, Conversation, Message } from './types';
 // Mock current user
 export const mockUser: User = {
   id: 'user-1',
-  name: 'Alex Chen',
-  email: 'alex.chen@ucla.edu',
+  name: 'Miles Morales',
+  email: 'miles.morales@ucla.edu',
   verifiedUCLA: true,
-  bookmarks: ['listing-1', 'listing-4', 'listing-7'],
+  bookmarks: [],
 };
 
 // Mock listings with UCLA-area addresses
 export const mockListings: Listing[] = [
   {
     id: 'listing-1',
-    title: 'Single room in 3BR Westwood apt — Summer 2026',
+    title: 'Sunny single in 3BR Westwood apartment',
     price: 1650,
     address: '691 Levering Ave',
     distanceFromCampus: 0.5,
@@ -51,7 +51,7 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-2',
-    title: 'Private 1BR w/ ensuite bath on Wilshire — Fall 2026',
+    title: 'Spacious 1BR with private bath on Wilshire Blvd',
     price: 2200,
     address: '10889 Wilshire Blvd',
     distanceFromCampus: 0.8,
@@ -88,7 +88,7 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-3',
-    title: 'Double room in 2BR apt on Roebling — Summer/Fall',
+    title: 'Double room in modern 2BR near Roebling',
     price: 950,
     address: '10982 Roebling Ave',
     distanceFromCampus: 0.4,
@@ -102,7 +102,7 @@ export const mockListings: Listing[] = [
     moveOutDate: '2026-09-20',
     quarter: ['summer', 'fall'],
     roommatePreference: 'female',
-    verifiedUCLA: true,
+    verifiedUCLA: false,
     amenities: {
       furnished: false,
       internet: true,
@@ -125,7 +125,7 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-4',
-    title: 'Large single w/ private bath on Gayley — Spring 2026',
+    title: 'Large single with ensuite bath, 3 min to campus',
     price: 1850,
     address: '565 Gayley Ave',
     distanceFromCampus: 0.3,
@@ -162,7 +162,7 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-5',
-    title: 'Single in 4BR house on Landfair — June to Aug',
+    title: 'Single room in 4BR house on Landfair Ave',
     price: 1400,
     address: '523 Landfair Ave',
     distanceFromCampus: 0.6,
@@ -198,7 +198,7 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-6',
-    title: 'Triple on Strathmore — budget summer sublet',
+    title: 'Budget-friendly triple on Strathmore Dr, all utils included',
     price: 750,
     address: '10850 Strathmore Dr',
     distanceFromCampus: 1.2,
@@ -207,11 +207,11 @@ export const mockListings: Listing[] = [
     ],
     roomType: 'triple+',
     bathroomType: 'shared',
-    moveInDate: '2026-09-20',
-    moveOutDate: '2026-12-20',
-    quarter: ['fall'],
+    moveInDate: '2026-06-24',
+    moveOutDate: '2026-09-01',
+    quarter: ['summer'],
     roommatePreference: 'male',
-    verifiedUCLA: true,
+    verifiedUCLA: false,
     amenities: {
       furnished: true,
       internet: true,
@@ -234,7 +234,7 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-7',
-    title: 'Furnished 1BR on Wilshire — short-term July–Sep',
+    title: 'Luxury furnished 1BR with city views · Wilshire',
     price: 2500,
     address: '10990 Wilshire Blvd',
     distanceFromCampus: 0.9,
@@ -271,7 +271,7 @@ export const mockListings: Listing[] = [
   },
   {
     id: 'listing-8',
-    title: 'Female roommate wanted — 2BR on Landfair Ave',
+    title: 'Female roommate wanted, 2BR on Landfair Ave',
     price: 1300,
     address: '636 Landfair Ave',
     distanceFromCampus: 0.5,
@@ -384,40 +384,7 @@ export const mockReviews: Review[] = [
   },
 ];
 
-// Mock messages and conversations
-export const mockMessages: Message[] = [
-  {
-    id: 'msg-1',
-    conversationId: 'conv-1',
-    senderId: 'user-5',
-    text: 'Hi! Is the room still available for summer?',
-    timestamp: '2026-02-12T09:00:00Z',
-    read: true,
-  },
-  {
-    id: 'msg-2',
-    conversationId: 'conv-1',
-    senderId: 'user-1',
-    text: 'Yes it is! Would you like to schedule a viewing?',
-    timestamp: '2026-02-12T09:15:00Z',
-    read: true,
-  },
-  {
-    id: 'msg-3',
-    conversationId: 'conv-1',
-    senderId: 'user-5',
-    text: 'That would be great! I\'m free this weekend.',
-    timestamp: '2026-02-12T09:20:00Z',
-    read: false,
-  },
-];
+// Mock messages and conversations — populated live via compose modal
+export const mockMessages: Message[] = [];
 
-export const mockConversations: Conversation[] = [
-  {
-    id: 'conv-1',
-    listingId: 'listing-1',
-    participants: ['user-1', 'user-5'],
-    lastMessage: mockMessages[2],
-    unreadCount: 1,
-  },
-];
+export const mockConversations: Conversation[] = [];

@@ -25,6 +25,7 @@ export default function FilterModal({
   resultCount,
 }: FilterModalProps) {
   const [filters, setFilters] = useState<FilterState>(initialFilters);
+  const [savedAnim, setSavedAnim] = useState(false);
 
   useEffect(() => {
     setFilters(initialFilters);
@@ -51,6 +52,12 @@ export default function FilterModal({
   const handleApply = () => {
     onApply(filters);
     onClose();
+  };
+
+  const handleSaveFilters = () => {
+    localStorage.setItem('ucsubla-saved-filters', JSON.stringify(filters));
+    setSavedAnim(true);
+    setTimeout(() => setSavedAnim(false), 1800);
   };
 
   const QUARTER_DATES: Record<string, { moveIn: string; moveOut: string }> = {
@@ -256,10 +263,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-[#E2E8F0] text-slateGray'
+                      : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -276,10 +283,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-[#E2E8F0] text-slateGray'
+                      : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -296,10 +303,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-[#E2E8F0] text-slateGray'
+                      : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -316,10 +323,10 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
-                      : 'bg-white border-[#E2E8F0] text-slateGray'
+                      : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
                   }`}
                 >
                   <span className="text-body">{option.label}</span>
@@ -347,11 +354,31 @@ export default function FilterModal({
           </div>
         </div>
 
-        {/* Apply Button (Fixed) */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 pb-safe app-container">
+        {/* Save + Apply (Fixed) */}
+        <div className="fixed bottom-0 left-0 right-0 px-6 pt-4 pb-safe app-container bg-[#F8FAFC] border-t border-[#E2E8F0]">
+          {/* Save filters row */}
+          <button
+            onClick={handleSaveFilters}
+            className="w-full flex items-center justify-center gap-2 py-2.5 mb-3 rounded-xl border border-[#E2E8F0] bg-white text-body text-slateGray font-medium hover:bg-gray-50 active:scale-[0.98] transition-all duration-100"
+          >
+            {savedAnim ? (
+              <>
+                <span className="animate-checkPop text-uclaBlue">✓</span>
+                <span className="text-uclaBlue font-medium">Saved!</span>
+              </>
+            ) : (
+              <>
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-slateGray">
+                  <path d="M3 2C2.44772 2 2 2.44772 2 3V12C2 12.5523 2.44772 13 3 13H12C12.5523 13 13 12.5523 13 12V5.41421C13 5.14899 12.8946 4.89464 12.7071 4.70711L10.2929 2.29289C10.1054 2.10536 9.85101 2 9.58579 2H3ZM4 3H9V5.5C9 5.77614 8.77614 6 8.5 6H4.5C4.22386 6 4 5.77614 4 5.5V3ZM5 3H8V5H5V3ZM4 8H11V12H4V8Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
+                </svg>
+                <span>Save filters for next time</span>
+              </>
+            )}
+          </button>
+
           <button
             onClick={handleApply}
-            className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated"
+            className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated active:scale-[0.98] transition-transform duration-100"
           >
             Apply Filters
           </button>

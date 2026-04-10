@@ -7,6 +7,7 @@ import ImageCarousel from '@/components/listings/ImageCarousel';
 import ReviewCard from '@/components/reviews/ReviewCard';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockListings, mockReviews, mockUser } from '@/lib/mockData';
+import { useBookmarks } from '@/lib/BookmarkContext';
 import { formatPrice, formatDateRange } from '@/lib/utils';
 import type { Listing } from '@/lib/types';
 
@@ -14,26 +15,77 @@ export default function ListingDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const listingId = params.id as string;
+  const { bookmarkedIds, toggleBookmark } = useBookmarks();
 
   const [listing, setListing] = useState<Listing | null>(null);
+  const [showComposeModal, setShowComposeModal] = useState(false);
+  const [composeText, setComposeText] = useState('');
+  const [sendSuccess, setSendSuccess] = useState(false);
 
   useEffect(() => {
-    // Check mock listings first
     let foundListing = mockListings.find((l) => l.id === listingId);
-
-    // If not found, check user-created listings in localStorage
     if (!foundListing) {
       const userListings = JSON.parse(localStorage.getItem('user-listings') || '[]');
       foundListing = userListings.find((l: Listing) => l.id === listingId);
     }
-
     setListing(foundListing || null);
   }, [listingId]);
 
   const reviews = mockReviews.filter((r) => r.listingId === listingId);
-  const [isBookmarked, setIsBookmarked] = useState(
-    mockUser.bookmarks.includes(listingId)
-  );
+  const isBookmarked = bookmarkedIds.includes(listingId);
+
+  const handleShare = async () => {
+    if (!listing) return;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: listing.title,
+          text: `${listing.title} · ${formatPrice(listing.price)}/mo`,
+          url: window.location.href,
+        });
+      } catch {
+        // User cancelled
+      }
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (!composeText.trim() || !listing) return;
+
+    const convId = `conv-${Date.now()}`;
+    const msgId = `msg-${Date.now()}`;
+    const now = new Date().toISOString();
+
+    const newMessage = {
+      id: msgId,
+      conversationId: convId,
+      senderId: mockUser.id,
+      text: composeText.trim(),
+      timestamp: now,
+      read: true,
+    };
+
+    const newConversation = {
+      id: convId,
+      listingId: listing.id,
+      participants: [mockUser.id, 'peter-parker'],
+      lastMessage: newMessage,
+      unreadCount: 0,
+    };
+
+    const existingConvos = JSON.parse(localStorage.getItem('uc-conversations') || '[]');
+    const existingMsgs = JSON.parse(localStorage.getItem('uc-messages') || '[]');
+    localStorage.setItem('uc-conversations', JSON.stringify([...existingConvos, newConversation]));
+    localStorage.setItem('uc-messages', JSON.stringify([...existingMsgs, newMessage]));
+
+    setSendSuccess(true);
+    setTimeout(() => {
+      setShowComposeModal(false);
+      setComposeText('');
+      setSendSuccess(false);
+      router.push('/messages');
+    }, 900);
+  };
 
   if (!listing) {
     return (
@@ -57,7 +109,8 @@ export default function ListingDetailsPage() {
   ].filter((item) => item.show);
 
   return (
-    <div className="min-h-screen pb-20 bg-background app-container">
+    <>
+    <div className={`min-h-screen pb-20 bg-background app-container transition-[filter] duration-200 ${showComposeModal ? 'blur-sm' : ''}`}>
       {/* Top Navigation */}
       <div className="blurHeaderWithNav app-container">
         <div className="blurHeaderWithNavContent">
@@ -71,13 +124,14 @@ export default function ListingDetailsPage() {
 
           <div className="flex items-center gap-2">
             <button
+              onClick={handleShare}
               className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
               aria-label="Share listing"
             >
               <Icon name="square.and.arrow.up" size={22} className="text-darkSlate" strokeWidth={1.5} />
             </button>
             <button
-              onClick={() => setIsBookmarked(!isBookmarked)}
+              onClick={() => toggleBookmark(listingId)}
               className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
@@ -94,12 +148,9 @@ export default function ListingDetailsPage() {
       {/* Spacer for fixed nav */}
       <div className="h-[60px]" style={{ marginTop: 'env(safe-area-inset-top)' }} />
 
-      {/* Image Carousel */}
       <ImageCarousel images={listing.images} alt={listing.title} />
 
-      {/* Main Content */}
       <div className="px-5 pt-4 pb-24">
-        {/* Title and Price */}
         <div className="mb-6">
           <h1 className="text-[20px] leading-[28px] font-medium text-darkSlate mb-2">
             {listing.title}
@@ -112,7 +163,6 @@ export default function ListingDetailsPage() {
           </div>
         </div>
 
-        {/* Address and Verified Badge */}
         <div className="space-y-2 mb-6">
           <div className="flex items-center gap-0.5">
             <Icon name="location.fill" size={16} className="text-slateGray" />
@@ -120,8 +170,6 @@ export default function ListingDetailsPage() {
               {listing.address} • {listing.distanceFromCampus} miles from campus
             </span>
           </div>
-
-          {/* Verified UCLA Student Badge */}
           {listing.verifiedUCLA && (
             <div className="flex items-center gap-0.5">
               <Icon name="checkmark.seal.fill" size={16} className="text-slateGray" />
@@ -130,7 +178,6 @@ export default function ListingDetailsPage() {
           )}
         </div>
 
-        {/* Badges */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
           <div className="bg-tagBg border border-borderLight rounded-lg px-4 py-[7px] flex items-center gap-1.5">
             <Icon name="bed.double.fill" size={18} className="text-uclaBlue" />
@@ -138,14 +185,12 @@ export default function ListingDetailsPage() {
               {listing.roomType === 'triple+' ? 'Triple+' : listing.roomType}
             </span>
           </div>
-
           <div className="bg-tagBg border border-borderLight rounded-lg px-4 py-[7px] flex items-center gap-1.5">
             <Icon name="shower.fill" size={18} className="text-uclaBlue" />
             <span className="text-body text-darkSlate capitalize font-medium">
               {listing.bathroomType}
             </span>
           </div>
-
           <div className="bg-tagBg border border-borderLight rounded-lg px-4 py-[7px] flex items-center gap-1.5">
             <Icon name="calendar" size={18} className="text-uclaBlue" />
             <span className="text-body text-darkSlate font-medium">
@@ -154,30 +199,22 @@ export default function ListingDetailsPage() {
           </div>
         </div>
 
-        {/* The Space */}
         <div className="mb-6">
           <h2 className="text-h2 font-semibold text-darkSlate mb-4">The Space</h2>
           <div className="flex flex-wrap gap-2">
             {amenityList.map((amenity) => (
-              <div
-                key={amenity.key}
-                className="bg-white border border-gray-300 rounded-xl px-4 py-2.5 flex items-center gap-2"
-              >
+              <div key={amenity.key} className="bg-white border border-gray-300 rounded-xl px-4 py-2.5 flex items-center gap-2">
                 <span className="text-body text-darkSlate">{amenity.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* About */}
         <div className="mb-6">
           <h2 className="text-h2 font-semibold text-darkSlate mb-3">About</h2>
-          <p className="text-body text-slateGray leading-relaxed">
-            {listing.description}
-          </p>
+          <p className="text-body text-slateGray leading-relaxed">{listing.description}</p>
         </div>
 
-        {/* Community Insights */}
         {reviews.length > 0 && (
           <div>
             <h2 className="text-h2 font-semibold text-darkSlate mb-4">Community Insights</h2>
@@ -190,18 +227,92 @@ export default function ListingDetailsPage() {
         )}
       </div>
 
-      {/* Message Button (Fixed) */}
+      {/* Message Button */}
       <div className="fixed bottom-20 left-0 right-0 px-6 py-4 app-container">
         <button
-          onClick={() => router.push('/messages')}
+          onClick={() => setShowComposeModal(true)}
           className="w-full btn-primary shadow-elevated flex items-center justify-center gap-2"
         >
-          <Icon name="message" size={18} className="text-white" />
+          <Icon name="paperplane" size={18} className="text-white" />
           <span>Message</span>
         </button>
       </div>
 
       <BottomNav />
     </div>
+
+    {/* Compose Modal — floating window */}
+    {showComposeModal && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center px-5"
+        style={{ background: 'rgba(0,0,0,0.4)' }}
+        onClick={(e) => { if (e.target === e.currentTarget) { setShowComposeModal(false); setComposeText(''); } }}
+      >
+        <div className="w-full max-w-[390px] bg-white rounded-2xl shadow-elevated overflow-hidden">
+          {/* Header */}
+          <div className="px-5 pt-5 pb-4 border-b border-borderLight">
+            <div className="flex items-center gap-3">
+              <img
+                src="/peter-parker.webp"
+                alt="Peter Parker"
+                className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-h3 text-darkSlate font-medium">Peter Parker</p>
+                <p className="text-small text-slateGray truncate">{listing.address}</p>
+              </div>
+              <button
+                onClick={() => { setShowComposeModal(false); setComposeText(''); }}
+                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <Icon name="xmark" size={18} className="text-slateGray" />
+              </button>
+            </div>
+          </div>
+
+          {/* Compose area */}
+          <div className="px-5 py-4">
+            <textarea
+              autoFocus
+              value={composeText}
+              onChange={(e) => setComposeText(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSendMessage(); }}
+              placeholder="Write your message to Aaron..."
+              rows={4}
+              className="w-full bg-[#F8FAFC] border border-borderLight rounded-xl px-4 py-3 text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-1 focus:ring-uclaBlue resize-none"
+              style={{ fontSize: '16px', lineHeight: '1.5' }}
+            />
+          </div>
+
+          {/* Actions */}
+          <div className="px-5 pb-5 flex gap-3">
+            <button
+              onClick={() => { setShowComposeModal(false); setComposeText(''); }}
+              className="flex-1 py-3 rounded-[18px] border border-gray-200 text-body text-slateGray font-medium hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSendMessage}
+              disabled={!composeText.trim() || sendSuccess}
+              className="flex-1 py-3 rounded-[18px] bg-uclaBlue text-white text-body font-medium flex items-center justify-center gap-2 disabled:opacity-40 hover:bg-[#25579e] transition-colors"
+            >
+              {sendSuccess ? (
+                <>
+                  <Icon name="checkmark.seal.fill" size={16} className="text-white" />
+                  <span>Sent!</span>
+                </>
+              ) : (
+                <>
+                  <Icon name="paperplane" size={16} className="text-white" />
+                  <span>Send</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

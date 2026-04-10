@@ -2,25 +2,20 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Icon from '@/components/common/Icon';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockUser, mockListings } from '@/lib/mockData';
-import { getInitials } from '@/lib/utils';
 import { useBookmarks } from '@/lib/BookmarkContext';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { bookmarkedIds } = useBookmarks();
-  const [displayName, setDisplayName] = useState(mockUser.name);
+  const [displayName] = useState(mockUser.name);
   const [toast, setToast] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem('user-profile');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.name) setDisplayName(parsed.name);
-    }
     const t = setTimeout(() => setIsLoaded(true), 350);
     return () => clearTimeout(t);
   }, []);
@@ -110,10 +105,14 @@ export default function ProfilePage() {
                 className="flex items-center gap-3 mb-3 w-full text-left hover:opacity-80 transition-opacity"
               >
                 {/* Avatar */}
-                <div className="w-16 h-16 rounded-full bg-uclaBlue flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-medium text-xl">
-                    {getInitials(displayName)}
-                  </span>
+                <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                  <Image
+                    src="/miles-morales.jpg"
+                    alt="Miles Morales"
+                    width={64}
+                    height={64}
+                    className="object-cover w-full h-full"
+                  />
                 </div>
 
                 {/* User Info */}
