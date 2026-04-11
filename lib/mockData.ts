@@ -211,7 +211,7 @@ export const mockListings: Listing[] = [
     moveOutDate: '2026-09-01',
     quarter: ['summer'],
     roommatePreference: 'male',
-    verifiedUCLA: false,
+    verifiedUCLA: true,
     amenities: {
       furnished: true,
       internet: true,
