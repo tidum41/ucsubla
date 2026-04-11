@@ -2,6 +2,7 @@
 
 import DatePickerField from '@/components/common/DatePickerField';
 import ChipGroup from '@/components/filters/ChipGroup';
+import RangeSlider from '@/components/filters/RangeSlider';
 import type { Quarter } from '@/lib/types';
 
 const quarterOptions = [
@@ -13,11 +14,13 @@ const quarterOptions = [
 
 interface Step2Props {
   address: string;
+  distanceFromCampus: number;
   moveInDate: string;
   moveOutDate: string;
   quarters: Quarter[];
   errors: Record<string, string>;
   onAddressChange: (v: string) => void;
+  onDistanceChange: (v: number) => void;
   onMoveInChange: (v: string) => void;
   onMoveOutChange: (v: string) => void;
   onQuarterChange: (selected: string[]) => void;
@@ -25,23 +28,19 @@ interface Step2Props {
 
 export default function Step2Location({
   address,
+  distanceFromCampus,
   moveInDate,
   moveOutDate,
   quarters,
   errors,
   onAddressChange,
+  onDistanceChange,
   onMoveInChange,
   onMoveOutChange,
   onQuarterChange,
 }: Step2Props) {
   return (
     <div className="flex flex-col gap-5 h-full">
-      {/* Step heading */}
-      <div>
-        <h2 className="text-h2 text-darkSlate font-medium">Where & when</h2>
-        <p className="text-small text-slateGray mt-0.5">Help renters understand availability.</p>
-      </div>
-
       {/* Address */}
       <div className="flex flex-col gap-1.5">
         <label className="text-body text-darkSlate font-medium">
@@ -58,6 +57,19 @@ export default function Step2Location({
         />
         {errors.address && <p className="text-small text-red-500">{errors.address}</p>}
       </div>
+
+      {/* Distance */}
+      <RangeSlider
+        min={0.1}
+        max={4}
+        step={0.1}
+        value={distanceFromCampus}
+        onChange={onDistanceChange}
+        formatValue={(v) => `${v.toFixed(1)} mi from campus`}
+        label="Distance from UCLA"
+        minLabel="0.1 mi"
+        maxLabel="4 mi"
+      />
 
       {/* Dates */}
       <div className="flex flex-col gap-2">

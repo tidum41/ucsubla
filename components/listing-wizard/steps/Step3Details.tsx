@@ -2,7 +2,6 @@
 
 import Icon from '@/components/common/Icon';
 import ChipGroup from '@/components/filters/ChipGroup';
-import RangeSlider from '@/components/filters/RangeSlider';
 import type { RoomType, BathroomType, RoommatePreference } from '@/lib/types';
 
 const roomTypeOptions = [
@@ -27,13 +26,11 @@ interface Step3Props {
   bathroomType: BathroomType | '';
   roommatePreference: RoommatePreference | '';
   price: string;
-  distanceFromCampus: number;
   errors: Record<string, string>;
   onRoomTypeChange: (v: RoomType) => void;
   onBathroomTypeChange: (v: BathroomType) => void;
   onRoommateChange: (v: RoommatePreference) => void;
   onPriceChange: (v: string) => void;
-  onDistanceChange: (v: number) => void;
 }
 
 export default function Step3Details({
@@ -41,22 +38,14 @@ export default function Step3Details({
   bathroomType,
   roommatePreference,
   price,
-  distanceFromCampus,
   errors,
   onRoomTypeChange,
   onBathroomTypeChange,
   onRoommateChange,
   onPriceChange,
-  onDistanceChange,
 }: Step3Props) {
   return (
-    <div className="flex flex-col gap-4 h-full">
-      {/* Step heading */}
-      <div>
-        <h2 className="text-h2 text-darkSlate font-medium">Room details</h2>
-        <p className="text-small text-slateGray mt-0.5">The specifics renters filter by most.</p>
-      </div>
-
+    <div className="flex flex-col gap-5 h-full">
       {/* Room type */}
       <div>
         <ChipGroup
@@ -114,19 +103,6 @@ export default function Step3Details({
         </div>
         {errors.price && <p className="text-small text-red-500">{errors.price}</p>}
       </div>
-
-      {/* Distance */}
-      <RangeSlider
-        min={0.1}
-        max={4}
-        step={0.1}
-        value={distanceFromCampus}
-        onChange={onDistanceChange}
-        formatValue={(v) => `${v.toFixed(1)} mi`}
-        label="Distance from UCLA"
-        minLabel="0.1 mi"
-        maxLabel="4 mi"
-      />
     </div>
   );
 }

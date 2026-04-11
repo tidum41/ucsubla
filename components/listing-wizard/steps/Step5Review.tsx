@@ -1,30 +1,8 @@
 'use client';
 
+import Icon from '@/components/common/Icon';
+import { formatPrice, formatDateRange } from '@/lib/utils';
 import type { Quarter, RoomType, BathroomType, RoommatePreference, ParkingType, Amenities } from '@/lib/types';
-
-const QUARTER_LABELS: Record<Quarter, string> = {
-  spring: 'Spring',
-  summer: 'Summer',
-  fall: 'Fall',
-  winter: 'Winter',
-};
-
-const ROOM_LABELS: Record<string, string> = {
-  single: 'Single',
-  double: 'Double',
-  'triple+': 'Triple+',
-};
-
-const BATHROOM_LABELS: Record<string, string> = {
-  private: 'Private Bath',
-  shared: 'Shared Bath',
-};
-
-const ROOMMATE_LABELS: Record<string, string> = {
-  male: 'Male',
-  female: 'Female',
-  coed: 'Co-Ed',
-};
 
 interface WizardFormDataSummary {
   title: string;
@@ -50,54 +28,25 @@ interface Step5Props {
   onDescriptionChange: (v: string) => void;
 }
 
-function formatDate(dateStr: string) {
-  if (!dateStr) return '';
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
-export default function Step5Review({ formData, imageFiles, errors, isSubmitting, onDescriptionChange }: Step5Props) {
+export default function Step5Review({ formData, errors, onDescriptionChange }: Step5Props) {
   const thumbnailUrl = formData.images.filter(img => img)[0];
-  const activeAmenities = (Object.entries(formData.amenities) as [keyof Amenities, boolean | ParkingType | null][])
-    .filter(([, v]) => !!v && v !== null)
-    .map(([k]) => k);
-
-  const amenityLabels: Partial<Record<keyof Amenities, string>> = {
-    furnished: 'Furnished',
-    internet: 'WiFi',
-    ac: 'AC',
-    fridge: 'Fridge',
-    microwave: 'Microwave',
-    dishwasher: 'Dishwasher',
-    laundryInUnit: 'In-Unit Laundry',
-    laundryOnSite: 'On-Site Laundry',
-    balcony: 'Balcony',
-    fitnessCenter: 'Gym',
-    pool: 'Pool',
-    hotTub: 'Hot Tub',
-    accessible: 'Accessible',
-    groundFloor: 'Ground Floor',
-  };
+  const hasValidDates = !!(formData.moveInDate && formData.moveOutDate);
+  const hasValidPrice = !!(formData.price && Number(formData.price) > 0);
 
   return (
     <div className="flex flex-col gap-4 h-full">
-      {/* Step heading */}
-      <div>
-        <h2 className="text-h2 text-darkSlate font-medium">Describe your listing</h2>
-        <p className="text-small text-slateGray mt-0.5">Give renters a feel for the space and neighborhood.</p>
-      </div>
-
-      {/* Description textarea */}
+      {/* Description textarea — smaller font */}
       <div className="flex flex-col gap-1.5">
+        <label className="text-body text-darkSlate font-medium">
+          Describe your listing <span className="text-red-500">*</span>
+        </label>
         <textarea
           value={formData.description}
           onChange={(e) => onDescriptionChange(e.target.value)}
           placeholder="Tell renters about the space, the vibe, nearby spots, what makes it special..."
           rows={4}
           maxLength={1000}
-          className={`w-full bg-white border rounded-xl px-4 py-3 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-2 focus:ring-uclaBlue resize-none transition-colors ${
+          className={`w-full bg-white border rounded-xl px-4 py-3 text-[13px] leading-[18px] text-darkSlate placeholder:text-lightSlate placeholder:text-[13px] focus:outline-none focus:ring-2 focus:ring-uclaBlue resize-none transition-colors ${
             errors.description ? 'border-red-400' : 'border-[#E2E8F0]'
           }`}
         />
@@ -110,67 +59,87 @@ export default function Step5Review({ formData, imageFiles, errors, isSubmitting
         </div>
       </div>
 
-      {/* Summary card */}
-      <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-card">
-        <div className="flex gap-3 p-3">
-          {/* Thumbnail */}
-          {thumbnailUrl ? (
-            <img
-              src={thumbnailUrl}
-              alt="Listing thumbnail"
-              className="w-16 h-16 rounded-xl object-cover flex-shrink-0"
-            />
-          ) : (
-            <div className="w-16 h-16 rounded-xl bg-slate-100 flex-shrink-0" />
-          )}
+      {/* Listing card preview — exact match to home feed card */}
+      <div>
+        <p className="text-small text-slateGray mb-2">Preview on the home feed</p>
 
-          {/* Details */}
-          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-            <p className="text-body font-medium text-darkSlate truncate">{formData.title || '—'}</p>
-            <p className="text-small text-slateGray truncate">{formData.address || '—'}</p>
-            <p className="text-small text-slateGray">
-              {[formData.roomType && ROOM_LABELS[formData.roomType],
-                formData.bathroomType && BATHROOM_LABELS[formData.bathroomType],
-                formData.roommatePreference && ROOMMATE_LABELS[formData.roommatePreference]
-              ].filter(Boolean).join(' · ')}
-            </p>
-            <div className="flex items-center gap-2 mt-0.5">
-              {formData.price && (
-                <span className="text-small font-medium text-uclaBlue">${Number(formData.price).toLocaleString()}/mo</span>
+        {/* Exact replica of ListingCard — non-interactive */}
+        <div className="pointer-events-none">
+          <div className="card shadow-minimal">
+            {/* Image */}
+            <div className="relative h-56 bg-gray-200 overflow-hidden">
+              {thumbnailUrl ? (
+                <img
+                  src={thumbnailUrl}
+                  alt={formData.title || 'Listing preview'}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full bg-gray-100">
+                  <Icon name="house" size={48} className="text-gray-300" />
+                </div>
               )}
-              {formData.moveInDate && formData.moveOutDate && (
-                <span className="text-small text-slateGray">
-                  {formatDate(formData.moveInDate)} – {formatDate(formData.moveOutDate)}
+              {/* Price badge */}
+              <div className="absolute top-3 left-3 bg-white rounded-full px-3 py-1 shadow-card">
+                <span className="text-sm font-semibold text-uclaBlue">
+                  {hasValidPrice ? formatPrice(Number(formData.price)) : '$—'}
                 </span>
-              )}
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-4 space-y-1">
+              {/* Title and bookmark */}
+              <div className="flex items-start justify-between gap-2 min-h-[25px]">
+                <h3 className="text-h3 text-darkSlate line-clamp-1 flex-1">
+                  {formData.title || 'Your listing title'}
+                </h3>
+                <Icon
+                  name="bookmark"
+                  size={20}
+                  className="text-darkSlate flex-shrink-0"
+                  strokeWidth={2}
+                />
+              </div>
+
+              {/* Address */}
+              <div className="flex items-center gap-0.5">
+                <Icon name="location.fill" size={16} className="text-slateGray" />
+                <span className="text-small text-slateGray">
+                  {formData.address || '—'} • {formData.distanceFromCampus.toFixed(1)} miles from campus
+                </span>
+              </div>
+
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-2 pt-3">
+                {formData.roomType && (
+                  <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
+                    <Icon name="bed.double.fill" size={18} className="text-uclaBlue" />
+                    <span className="text-tiny text-darkSlate capitalize font-normal">
+                      {formData.roomType === 'triple+' ? 'Triple+' : formData.roomType}
+                    </span>
+                  </div>
+                )}
+                {formData.bathroomType && (
+                  <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
+                    <Icon name="shower.fill" size={18} className="text-uclaBlue" />
+                    <span className="text-tiny text-darkSlate capitalize font-normal">
+                      {formData.bathroomType}
+                    </span>
+                  </div>
+                )}
+                {hasValidDates && (
+                  <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
+                    <Icon name="calendar" size={18} className="text-uclaBlue" />
+                    <span className="text-tiny text-darkSlate font-normal">
+                      {formatDateRange(formData.moveInDate, formData.moveOutDate)}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Amenity chips */}
-        {activeAmenities.length > 0 && (
-          <div className="border-t border-[#F1F5F9] px-3 py-2">
-            <div className="flex flex-wrap gap-1.5">
-              {/* Parking first if set */}
-              {formData.amenities.parking && (
-                <span className="text-[11px] font-medium bg-slate-50 border border-[#E2E8F0] text-slateGray px-2 py-0.5 rounded-full capitalize">
-                  {formData.amenities.parking} parking
-                </span>
-              )}
-              {activeAmenities
-                .filter(k => k !== 'parking')
-                .slice(0, 6)
-                .map(k => (
-                  <span key={k} className="text-[11px] font-medium bg-slate-50 border border-[#E2E8F0] text-slateGray px-2 py-0.5 rounded-full">
-                    {amenityLabels[k] || k}
-                  </span>
-                ))}
-              {activeAmenities.filter(k => k !== 'parking').length > 6 && (
-                <span className="text-[11px] text-slateGray px-1">+{activeAmenities.filter(k => k !== 'parking').length - 6} more</span>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

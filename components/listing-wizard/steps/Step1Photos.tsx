@@ -23,12 +23,6 @@ export default function Step1Photos({
 }: Step1Props) {
   return (
     <div className="flex flex-col gap-5 h-full">
-      {/* Step heading */}
-      <div>
-        <h2 className="text-h2 text-darkSlate font-medium">Add photos</h2>
-        <p className="text-small text-slateGray mt-0.5">Great photos get more inquiries. Upload up to 8.</p>
-      </div>
-
       {/* Upload zone */}
       {imageFiles.length < 8 && (
         <label className="block">
@@ -49,10 +43,14 @@ export default function Step1Photos({
               {imageFiles.length === 0 ? 'Upload Photos' : 'Add More'}
             </p>
             <p className="text-small text-slateGray mt-0.5">
-              {imageFiles.length} of 8 uploaded
+              {imageFiles.length} of 8 · Great photos get more inquiries
             </p>
           </div>
         </label>
+      )}
+
+      {errors.images && (
+        <p className="text-small text-red-500 -mt-2">{errors.images}</p>
       )}
 
       {/* Image grid */}
@@ -75,10 +73,6 @@ export default function Step1Photos({
             </div>
           ))}
         </div>
-      )}
-
-      {errors.images && (
-        <p className="text-small text-red-500 -mt-2">{errors.images}</p>
       )}
 
       {/* Title input */}
