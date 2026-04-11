@@ -307,17 +307,26 @@
     animation: checkPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /* View transitions — image morphs from card to detail */
+  /* View transitions — Airbnb-style card-to-detail image morph */
   @media (prefers-reduced-motion: no-preference) {
-    ::view-transition-old(root) {
-      animation: none;
-    }
+    /* Suppress the default root page crossfade — content swaps instantly */
+    ::view-transition-old(root),
     ::view-transition-new(root) {
       animation: none;
+      mix-blend-mode: normal;
     }
+
+    /* Both snapshots stay fully opaque — no crossfade, just geometry */
+    ::view-transition-old(listing-hero),
+    ::view-transition-new(listing-hero) {
+      animation: none;
+      mix-blend-mode: normal;
+    }
+
+    /* The group interpolates position + size between card and detail */
     ::view-transition-group(listing-hero) {
-      animation-duration: 0.35s;
-      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      animation-duration: 0.42s;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
 }

@@ -1,11 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Icon from '../common/Icon';
 import { formatPrice, formatDateRange } from '@/lib/utils';
+import { getActiveListingId, setActiveListingId } from '@/lib/viewTransitions';
 import type { Listing } from '@/lib/types';
+
+type VTDocument = Document & { startViewTransition: (cb: () => void) => void };
 
 interface ListingCardProps {
   listing: Listing;
@@ -18,9 +21,33 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
   const router = useRouter();
   const [imageError, setImageError] = useState(false);
   const [bookmarkAnim, setBookmarkAnim] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+
+  // After back-navigation: this card re-renders as the transition target.
+  // isActive reflects whether it should carry the view-transition-name.
+  useEffect(() => {
+    const active = getActiveListingId() === listing.id;
+    setIsActive(active);
+    if (active) {
+      // Clear after transition has finished so no stale names persist
+      const timer = setTimeout(() => {
+        setActiveListingId(null);
+        setIsActive(false);
+      }, 700);
+      return () => clearTimeout(timer);
+    }
+  }, [listing.id]);
 
   const handleCardClick = () => {
-    router.push(`/listing/${listing.id}`);
+    setActiveListingId(listing.id);
+    setIsActive(true); // optimistically mark so snapshot captures the name
+
+    const target = `/listing/${listing.id}`;
+    if ('startViewTransition' in document) {
+      (document as VTDocument).startViewTransition(() => router.push(target));
+    } else {
+      router.push(target);
+    }
   };
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
@@ -36,12 +63,15 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
       tabIndex={0}
       onClick={handleCardClick}
       onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
-      className="block animate-cardFadeUp active:scale-[0.98] transition-transform duration-100 cursor-pointer"
+      className="block animate-cardFadeUp cursor-pointer"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <div className="card shadow-minimal hover:shadow-card transition-shadow duration-200">
-        {/* Image */}
-        <div className="relative h-56 bg-gray-200 overflow-hidden">
+        {/* Image — carries view-transition-name only when this card is the active one */}
+        <div
+          className="relative h-56 bg-gray-200 overflow-hidden"
+          style={{ viewTransitionName: isActive ? 'listing-hero' : 'none' }}
+        >
           {!imageError ? (
             <Image
               src={listing.images[0]}

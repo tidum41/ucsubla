@@ -22,6 +22,15 @@ export default function ListingDetailsPage() {
   const [composeText, setComposeText] = useState('');
   const [sendSuccess, setSendSuccess] = useState(false);
 
+  type VTDocument = Document & { startViewTransition: (cb: () => void) => void };
+  const handleBack = () => {
+    if ('startViewTransition' in document) {
+      (document as VTDocument).startViewTransition(() => router.back());
+    } else {
+      router.back();
+    }
+  };
+
   useEffect(() => {
     let foundListing = mockListings.find((l) => l.id === listingId);
     if (!foundListing) {
@@ -115,7 +124,7 @@ export default function ListingDetailsPage() {
       <div className="blurHeaderWithNav app-container">
         <div className="blurHeaderWithNavContent">
           <button
-            onClick={() => router.back()}
+            onClick={handleBack}
             className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
             aria-label="Go back"
           >
