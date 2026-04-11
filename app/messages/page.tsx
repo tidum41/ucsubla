@@ -30,10 +30,10 @@ export default function MessagesPage() {
   useEffect(() => {
     // Clear any stale conversations from previous persona (Aaron Davis → Peter Parker)
     const chatVersion = localStorage.getItem('uc-chat-version');
-    if (chatVersion !== '3') {
+    if (chatVersion !== '4') {
       localStorage.removeItem('uc-conversations');
       localStorage.removeItem('uc-messages');
-      localStorage.setItem('uc-chat-version', '3');
+      localStorage.setItem('uc-chat-version', '4');
     }
     const storedConvos: StoredConversation[] = JSON.parse(localStorage.getItem('uc-conversations') || '[]');
     const storedMsgs: Message[] = JSON.parse(localStorage.getItem('uc-messages') || '[]');
