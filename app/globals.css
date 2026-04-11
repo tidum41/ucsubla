@@ -307,23 +307,4 @@
     animation: checkPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /* Listing detail — enter (expand up) */
-  @keyframes detailEnter {
-    from { transform: translateY(48px); }
-    to   { transform: translateY(0); }
-  }
-
-  /* Listing detail — exit (collapse down) */
-  @keyframes detailExit {
-    from { transform: translateY(0); }
-    to   { transform: translateY(56px); }
-  }
-
-  .animate-detailEnter {
-    animation: detailEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .animate-detailExit {
-    animation: detailExit 0.26s cubic-bezier(0.4, 0, 1, 1) forwards;
-  }
 }

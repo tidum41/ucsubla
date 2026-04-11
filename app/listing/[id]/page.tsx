@@ -21,12 +21,8 @@ export default function ListingDetailsPage() {
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [composeText, setComposeText] = useState('');
   const [sendSuccess, setSendSuccess] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
 
-  const handleBack = () => {
-    setIsExiting(true);
-    setTimeout(() => router.back(), 240);
-  };
+  const handleBack = () => router.back();
 
   useEffect(() => {
     let foundListing = mockListings.find((l) => l.id === listingId);
@@ -116,7 +112,7 @@ export default function ListingDetailsPage() {
 
   return (
     <>
-    <div className={`min-h-screen pb-20 bg-background app-container transition-[filter] duration-200 ${showComposeModal ? 'blur-sm' : ''} ${isExiting ? 'animate-detailExit' : 'animate-detailEnter'}`}>
+    <div className={`min-h-screen pb-20 bg-background app-container transition-[filter] duration-200 ${showComposeModal ? 'blur-sm' : ''}`}>
       {/* Top Navigation */}
       <div className="blurHeaderWithNav app-container">
         <div className="blurHeaderWithNavContent">
