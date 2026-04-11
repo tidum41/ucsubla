@@ -8,7 +8,7 @@ interface Step1Props {
   imageFiles: File[];
   errors: Record<string, string>;
   onTitleChange: (v: string) => void;
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onImageUpload: () => void;
   onRemoveImage: (i: number) => void;
 }
 
@@ -25,28 +25,22 @@ export default function Step1Photos({
     <div className="flex flex-col gap-5 h-full">
       {/* Upload zone */}
       {imageFiles.length < 8 && (
-        <label className="block">
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={onImageUpload}
-            className="hidden"
-          />
-          <div className={`bg-white border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors ${
-            errors.images ? 'border-red-400' : 'border-[#CBD5E1] hover:border-uclaBlue'
-          }`}>
-            <div className="w-10 h-10 bg-uclaBlue/10 rounded-full flex items-center justify-center mx-auto mb-2">
-              <Icon name="plus" size={20} className="text-uclaBlue" />
-            </div>
-            <p className="text-body text-darkSlate font-medium">
-              {imageFiles.length === 0 ? 'Upload Photos' : 'Add More'}
-            </p>
-            <p className="text-small text-slateGray mt-0.5">
-              {imageFiles.length} of 8 · Great photos get more inquiries
-            </p>
+        <div
+          onClick={onImageUpload}
+          className={`bg-white border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors select-none ${
+            errors.images ? 'border-red-400' : 'border-[#CBD5E1] active:border-uclaBlue'
+          }`}
+        >
+          <div className="w-10 h-10 bg-uclaBlue/10 rounded-full flex items-center justify-center mx-auto mb-2">
+            <Icon name="plus" size={20} className="text-uclaBlue" />
           </div>
-        </label>
+          <p className="text-body text-darkSlate font-medium">
+            {imageFiles.length === 0 ? 'Upload Photos' : 'Add More'}
+          </p>
+          <p className="text-small text-slateGray mt-0.5">
+            {imageFiles.length} of 8 · Great photos get more inquiries
+          </p>
+        </div>
       )}
 
       {errors.images && (

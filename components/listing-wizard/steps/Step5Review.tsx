@@ -61,7 +61,7 @@ export default function Step5Review({ formData, errors, onDescriptionChange }: S
 
       {/* Listing card preview — exact match to home feed card */}
       <div>
-        <p className="text-small text-slateGray mb-2">Preview on the home feed</p>
+        <p className="text-small text-slateGray mb-2">What your listing preview will look like</p>
 
         {/* Exact replica of ListingCard — non-interactive */}
         <div className="pointer-events-none">

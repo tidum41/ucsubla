@@ -37,17 +37,9 @@ const ACCESSIBILITY = [
   { key: 'groundFloor' as keyof Amenities, label: 'Ground Floor' },
 ];
 
-// ─── Shared chip button ───────────────────────────────────────────────────────
+// ─── Shared chip button ────────────────────────────────────────────────────────
 
-function AmenityChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
+function AmenityChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -63,7 +55,7 @@ function AmenityChip({
   );
 }
 
-// ─── Collapsible section ─────────────────────────────────────────────────────
+// ─── Collapsible accordion section ────────────────────────────────────────────
 
 function AccordionSection({
   title,
@@ -78,26 +70,43 @@ function AccordionSection({
 }) {
   return (
     <div className="border border-[#E2E8F0] rounded-xl overflow-hidden bg-white">
+      {/* Header row */}
       <button
         type="button"
         onClick={onToggle}
         className="w-full flex items-center justify-between px-4 py-3.5 active:bg-slate-50 transition-colors"
       >
         <span className="text-h2 text-darkSlate">{title}</span>
-        <div className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-          <Icon name="chevron.left" size={18} className="text-slateGray rotate-[-90deg]" />
+        {/* Chevron rotates smoothly on open/close */}
+        <div
+          style={{
+            transform: `rotate(${isOpen ? '-90deg' : '90deg'})`,
+            transition: 'transform 0.26s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          <Icon name="chevron.left" size={18} className="text-slateGray" />
         </div>
       </button>
-      {isOpen && (
-        <div className="px-4 pb-4">
-          {children}
+
+      {/* Animated content — grid-template-rows trick for smooth height animation */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateRows: isOpen ? '1fr' : '0fr',
+          transition: 'grid-template-rows 0.26s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        <div style={{ overflow: 'hidden' }}>
+          <div className="px-4 pb-4 pt-1">
+            {children}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── Main component ────────────────────────────────────────────────────────────
 
 interface Step4Props {
   amenities: Amenities;
@@ -119,49 +128,31 @@ export default function Step4Amenities({ amenities, onToggleAmenity, onParkingCh
 
   return (
     <div className="flex flex-col gap-2 overflow-y-auto pb-2">
-      {/* Essentials */}
+
       <AccordionSection title="Essentials" isOpen={open.essentials} onToggle={() => toggle('essentials')}>
         <div className="flex flex-wrap gap-2">
           {ESSENTIALS.map(({ key, label }) => (
-            <AmenityChip
-              key={key}
-              label={label}
-              active={!!amenities[key]}
-              onClick={() => onToggleAmenity(key)}
-            />
+            <AmenityChip key={key} label={label} active={!!amenities[key]} onClick={() => onToggleAmenity(key)} />
           ))}
         </div>
       </AccordionSection>
 
-      {/* Appliances */}
       <AccordionSection title="Appliances" isOpen={open.appliances} onToggle={() => toggle('appliances')}>
         <div className="flex flex-wrap gap-2">
           {APPLIANCES.map(({ key, label }) => (
-            <AmenityChip
-              key={key}
-              label={label}
-              active={!!amenities[key]}
-              onClick={() => onToggleAmenity(key)}
-            />
+            <AmenityChip key={key} label={label} active={!!amenities[key]} onClick={() => onToggleAmenity(key)} />
           ))}
         </div>
       </AccordionSection>
 
-      {/* Amenities */}
       <AccordionSection title="Amenities" isOpen={open.amenities} onToggle={() => toggle('amenities')}>
         <div className="flex flex-wrap gap-2">
           {AMENITIES.map(({ key, label }) => (
-            <AmenityChip
-              key={key}
-              label={label}
-              active={!!amenities[key]}
-              onClick={() => onToggleAmenity(key)}
-            />
+            <AmenityChip key={key} label={label} active={!!amenities[key]} onClick={() => onToggleAmenity(key)} />
           ))}
         </div>
       </AccordionSection>
 
-      {/* Parking */}
       <AccordionSection title="Parking" isOpen={open.parking} onToggle={() => toggle('parking')}>
         <div className="flex flex-wrap gap-2">
           {PARKING_OPTIONS.map(({ value, label }) => (
@@ -175,9 +166,8 @@ export default function Step4Amenities({ amenities, onToggleAmenity, onParkingCh
         </div>
       </AccordionSection>
 
-      {/* Accessibility */}
       <AccordionSection title="Accessibility" isOpen={open.accessibility} onToggle={() => toggle('accessibility')}>
-        <div className="bg-white rounded-lg space-y-4">
+        <div className="space-y-4">
           {ACCESSIBILITY.map(({ key, label }) => (
             <label key={key} className="flex items-center justify-between cursor-pointer">
               <span className="text-body text-slateGray">{label}</span>
@@ -191,6 +181,7 @@ export default function Step4Amenities({ amenities, onToggleAmenity, onParkingCh
           ))}
         </div>
       </AccordionSection>
+
     </div>
   );
 }

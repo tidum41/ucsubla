@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Icon from '@/components/common/Icon';
 import BottomNav from '@/components/layout/BottomNav';
 import WizardProgressBar from '@/components/listing-wizard/WizardProgressBar';
 import WizardStepShell from '@/components/listing-wizard/WizardStepShell';
@@ -15,9 +16,10 @@ import type { Listing, Quarter, RoomType, BathroomType, RoommatePreference, Park
 
 const TOTAL_STEPS = 5;
 
+// Demo autofill values
 const initialFormData = {
-  title: '',
-  address: '',
+  title: 'Flexible dates male double near In-N-Out',
+  address: '919 Gayley Ave',
   distanceFromCampus: 0.5,
   roomType: '' as RoomType | '',
   bathroomType: '' as BathroomType | '',
@@ -25,7 +27,7 @@ const initialFormData = {
   moveInDate: '',
   moveOutDate: '',
   quarters: [] as Quarter[],
-  price: '',
+  price: '1100',
   images: [''] as string[],
   description: '',
   amenities: {
@@ -59,7 +61,20 @@ export default function CreateListingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Share prompt after publishing
+  const [showSharePrompt, setShowSharePrompt] = useState(false);
+  const [publishedListingId, setPublishedListingId] = useState<string | null>(null);
+
   const hasAutoFilledQuarters = useRef(false);
+
+  // Clear previously demo-created listings on mount
+  useEffect(() => {
+    const version = localStorage.getItem('user-listings-demo-version');
+    if (version !== '2') {
+      localStorage.removeItem('user-listings');
+      localStorage.setItem('user-listings-demo-version', '2');
+    }
+  }, []);
 
   // Clear image error when images added
   useEffect(() => {
@@ -146,20 +161,22 @@ export default function CreateListingPage() {
     setFormData(prev => ({ ...prev, quarters, moveInDate: moveIn, moveOutDate: moveOut }));
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    const newFiles = Array.from(files);
-    if (imageFiles.length + newFiles.length > 8) {
-      alert('Maximum 8 images allowed');
-      return;
+  // Demo: always loads newlistingsample.jpg from public folder
+  const handleImageUpload = async () => {
+    if (imageFiles.length >= 8) return;
+    try {
+      const response = await fetch('/newlistingsample.jpg');
+      const blob = await response.blob();
+      const file = new File([blob], 'listing-photo.jpg', { type: 'image/jpeg' });
+      setImageFiles(prev => [...prev, file]);
+      const imageUrl = URL.createObjectURL(file);
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images.filter(img => img), imageUrl],
+      }));
+    } catch {
+      // no-op
     }
-    setImageFiles(prev => [...prev, ...newFiles]);
-    const imageUrls = newFiles.map(file => URL.createObjectURL(file));
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images.filter(img => img), ...imageUrls],
-    }));
   };
 
   const removeImage = (index: number) => {
@@ -278,8 +295,33 @@ export default function CreateListingPage() {
     savedListings.push(newListing);
     localStorage.setItem('user-listings', JSON.stringify(savedListings));
 
-    await new Promise(resolve => setTimeout(resolve, 800));
-    router.push(`/listing/${newListing.id}`);
+    await new Promise(resolve => setTimeout(resolve, 600));
+
+    setPublishedListingId(newListing.id);
+    setIsSubmitting(false);
+    setShowSharePrompt(true);
+  };
+
+  // ─── Share prompt handlers ──────────────────────────────────────────────────
+
+  const handleShareListing = async () => {
+    if (!publishedListingId) return;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: formData.title,
+          text: `Check out my sublease: ${formData.title} — $${Number(formData.price).toLocaleString()}/mo near UCLA`,
+          url: `${window.location.origin}/listing/${publishedListingId}`,
+        });
+      } catch {
+        // user cancelled
+      }
+    }
+    router.push(`/listing/${publishedListingId}`);
+  };
+
+  const handleViewListing = () => {
+    if (publishedListingId) router.push(`/listing/${publishedListingId}`);
   };
 
   // ─── Step renderer ─────────────────────────────────────────────────────────
@@ -357,18 +399,13 @@ export default function CreateListingPage() {
       {/* Fixed header */}
       <div className="blurHeaderCentered app-container">
         <div className="blurHeaderCenteredContent">
-          {/* Cancel — always exits the flow */}
           <button
             onClick={() => router.back()}
             className="text-h3 text-uclaBlue font-medium w-[60px]"
           >
             Cancel
           </button>
-
-          {/* Centered progress bar */}
           <WizardProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
-
-          {/* Right spacer — matches Cancel width for centering */}
           <div className="w-[60px]" />
         </div>
       </div>
@@ -376,17 +413,16 @@ export default function CreateListingPage() {
       {/* Header spacer */}
       <div className="h-[44px]" style={{ marginTop: 'env(safe-area-inset-top)' }} />
 
-      {/* Step content — x-clipped for slide, y-scrollable for tall steps */}
+      {/* Step content */}
       <div className="flex-1 overflow-x-hidden overflow-y-auto px-5 pt-5 pb-2">
         <WizardStepShell stepKey={`step-${currentStep}`} direction={direction}>
           {renderStep()}
         </WizardStepShell>
       </div>
 
-      {/* Sticky footer — above BottomNav */}
+      {/* Sticky footer */}
       <div className="fixed bottom-20 left-0 right-0 app-container px-5 py-3 bg-white/90 backdrop-blur-sm border-t border-[#E2E8F0]">
         <div className="flex items-center gap-3">
-          {/* Back — hidden on step 0 since Cancel handles exit */}
           {currentStep > 0 ? (
             <button
               type="button"
@@ -400,7 +436,6 @@ export default function CreateListingPage() {
             <div className="flex-1" />
           )}
 
-          {/* Next / Publish */}
           <button
             type="button"
             onClick={currentStep === TOTAL_STEPS - 1 ? handleSubmit : handleNext}
@@ -422,6 +457,48 @@ export default function CreateListingPage() {
       </div>
 
       <BottomNav />
+
+      {/* ─── Share prompt — slides up after publish ─────────────────────────── */}
+      {showSharePrompt && publishedListingId && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[2000] flex items-end app-container"
+          onClick={handleViewListing}
+        >
+          <div
+            className="animate-slideUp w-full bg-white rounded-t-3xl px-6 pt-6"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 28px)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Animated celebration icon */}
+            <div className="flex justify-center mb-5">
+              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center animate-celebrationBounce">
+                <Icon name="checkmark.seal.fill" size={36} className="text-green-500" />
+              </div>
+            </div>
+
+            <h2 className="text-h1 text-darkSlate text-center font-medium mb-2">
+              Your listing is live!
+            </h2>
+            <p className="text-body text-slateGray text-center mb-7 leading-relaxed">
+              Share it to get the ball rolling — even a single post to your group chat could be the difference between zero traction and your first inquiry today.
+            </p>
+
+            <button
+              onClick={handleShareListing}
+              className="w-full bg-uclaBlue text-white py-4 rounded-xl text-h3 font-medium shadow-elevated active:scale-[0.98] transition-transform duration-100 flex items-center justify-center gap-2 mb-3"
+            >
+              <Icon name="square.and.arrow.up" size={18} className="text-white" strokeWidth={1.5} />
+              Share Listing
+            </button>
+            <button
+              onClick={handleViewListing}
+              className="w-full border border-[#E2E8F0] bg-white text-darkSlate py-4 rounded-xl text-h3 font-medium active:scale-[0.98] transition-transform duration-100"
+            >
+              View Listing
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
