@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Icon from '@/components/common/Icon';
 import DatePickerField from '@/components/common/DatePickerField';
 import ChipGroup from '@/components/filters/ChipGroup';
@@ -341,7 +342,9 @@ export default function CreateListingPage() {
             Cancel
           </button>
           <h1 className="text-h1 text-darkSlate">Create Listing</h1>
-          <div className="w-[60px]" /> {/* Spacer for centering */}
+          <Link href="/listing/new-v2" className="text-small text-uclaBlue font-medium w-[60px] text-right">
+            Try new ✦
+          </Link>
         </div>
       </div>
 

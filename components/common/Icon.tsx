@@ -21,6 +21,18 @@ import {
   ChevronLeft,
   ChevronRight,
   Send,
+  Wifi,
+  Wind,
+  Refrigerator,
+  Microwave,
+  Waves,
+  WashingMachine,
+  Dumbbell,
+  Flame,
+  Accessibility,
+  Car,
+  Trees,
+  Building2,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -48,6 +60,19 @@ const iconMap: Record<string, LucideIcon> = {
   'chevron.left': ChevronLeft,
   'chevron.right': ChevronRight,
   paperplane: Send,
+  // Amenity icons
+  wifi: Wifi,
+  wind: Wind,
+  refrigerator: Refrigerator,
+  microwave: Microwave,
+  waves: Waves,
+  'washing-machine': WashingMachine,
+  dumbbell: Dumbbell,
+  flame: Flame,
+  accessibility: Accessibility,
+  car: Car,
+  trees: Trees,
+  building: Building2,
 };
 
 export interface IconProps {

@@ -307,4 +307,20 @@
     animation: checkPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
+  /* Wizard step slide transitions */
+  @keyframes slideInFromRight {
+    from { transform: translateX(100%); opacity: 0.6; }
+    to   { transform: translateX(0);    opacity: 1; }
+  }
+  @keyframes slideInFromLeft {
+    from { transform: translateX(-100%); opacity: 0.6; }
+    to   { transform: translateX(0);     opacity: 1; }
+  }
+  .animate-slideInFromRight {
+    animation: slideInFromRight 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-slideInFromLeft {
+    animation: slideInFromLeft 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
 }
