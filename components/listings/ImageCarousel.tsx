@@ -58,7 +58,6 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
       {/* Image Container */}
       <div
         className="relative w-full h-[281px] bg-gray-200 overflow-hidden"
-        style={{ viewTransitionName: 'listing-hero' }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

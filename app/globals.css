@@ -307,26 +307,23 @@
     animation: checkPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /* View transitions — Airbnb-style card-to-detail image morph */
-  @media (prefers-reduced-motion: no-preference) {
-    /* Suppress the default root page crossfade — content swaps instantly */
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation: none;
-      mix-blend-mode: normal;
-    }
+  /* Listing detail — enter (expand up) */
+  @keyframes detailEnter {
+    from { transform: translateY(48px); }
+    to   { transform: translateY(0); }
+  }
 
-    /* Both snapshots stay fully opaque — no crossfade, just geometry */
-    ::view-transition-old(listing-hero),
-    ::view-transition-new(listing-hero) {
-      animation: none;
-      mix-blend-mode: normal;
-    }
+  /* Listing detail — exit (collapse down) */
+  @keyframes detailExit {
+    from { transform: translateY(0); }
+    to   { transform: translateY(56px); }
+  }
 
-    /* The group interpolates position + size between card and detail */
-    ::view-transition-group(listing-hero) {
-      animation-duration: 0.42s;
-      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    }
+  .animate-detailEnter {
+    animation: detailEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-detailExit {
+    animation: detailExit 0.26s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
 }

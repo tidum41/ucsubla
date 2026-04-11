@@ -21,14 +21,11 @@ export default function ListingDetailsPage() {
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [composeText, setComposeText] = useState('');
   const [sendSuccess, setSendSuccess] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
-  type VTDocument = Document & { startViewTransition: (cb: () => void) => void };
   const handleBack = () => {
-    if ('startViewTransition' in document) {
-      (document as VTDocument).startViewTransition(() => router.back());
-    } else {
-      router.back();
-    }
+    setIsExiting(true);
+    setTimeout(() => router.back(), 240);
   };
 
   useEffect(() => {
@@ -119,7 +116,7 @@ export default function ListingDetailsPage() {
 
   return (
     <>
-    <div className={`min-h-screen pb-20 bg-background app-container transition-[filter] duration-200 ${showComposeModal ? 'blur-sm' : ''}`}>
+    <div className={`min-h-screen pb-20 bg-background app-container transition-[filter] duration-200 ${showComposeModal ? 'blur-sm' : ''} ${isExiting ? 'animate-detailExit' : 'animate-detailEnter'}`}>
       {/* Top Navigation */}
       <div className="blurHeaderWithNav app-container">
         <div className="blurHeaderWithNavContent">
