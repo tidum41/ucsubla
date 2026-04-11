@@ -12,7 +12,7 @@ export default function WizardStepShell({ stepKey, direction, children }: Wizard
     : 'animate-slideInFromLeft';
 
   return (
-    <div key={stepKey} className={`${animClass} h-full w-full`}>
+    <div key={stepKey} className={`${animClass} w-full`}>
       {children}
     </div>
   );

@@ -29,7 +29,7 @@ const initialFormData = {
   quarters: [] as Quarter[],
   price: '1100',
   images: [''] as string[],
-  description: '',
+  description: "Super chill double room in a 4-person apartment on Gayley — 3 min walk to In-N-Out and about 10 mins to campus on foot. The unit has AC, in-unit laundry, and a parking spot included. My roommates are all UCLA students (mix of grad and undergrad), pretty easygoing and quiet during the week. Looking for someone low-key who's around the same vibe. Dates are flexible so just message me and we can figure something out!",
   amenities: {
     furnished: false,
     internet: false,
@@ -414,7 +414,7 @@ export default function CreateListingPage() {
       <div className="h-[44px]" style={{ marginTop: 'env(safe-area-inset-top)' }} />
 
       {/* Step content */}
-      <div className="flex-1 overflow-x-hidden overflow-y-auto px-5 pt-5 pb-2">
+      <div className="flex-1 overflow-x-hidden overflow-y-auto px-5 pt-5 pb-36">
         <WizardStepShell stepKey={`step-${currentStep}`} direction={direction}>
           {renderStep()}
         </WizardStepShell>
