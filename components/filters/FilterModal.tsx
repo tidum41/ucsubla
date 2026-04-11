@@ -25,7 +25,9 @@ export default function FilterModal({
   resultCount,
 }: FilterModalProps) {
   const [filters, setFilters] = useState<FilterState>(initialFilters);
-  const [savedAnim, setSavedAnim] = useState(false);
+  const [saveForNext, setSaveForNext] = useState(() => {
+    try { return !!localStorage.getItem('ucsubla-saved-filters'); } catch { return false; }
+  });
 
   useEffect(() => {
     setFilters(initialFilters);
@@ -50,14 +52,13 @@ export default function FilterModal({
   };
 
   const handleApply = () => {
+    if (saveForNext) {
+      localStorage.setItem('ucsubla-saved-filters', JSON.stringify(filters));
+    } else {
+      localStorage.removeItem('ucsubla-saved-filters');
+    }
     onApply(filters);
     onClose();
-  };
-
-  const handleSaveFilters = () => {
-    localStorage.setItem('ucsubla-saved-filters', JSON.stringify(filters));
-    setSavedAnim(true);
-    setTimeout(() => setSavedAnim(false), 1800);
   };
 
   const QUARTER_DATES: Record<string, { moveIn: string; moveOut: string }> = {
@@ -352,30 +353,24 @@ export default function FilterModal({
               ))}
             </div>
           </div>
+
+          {/* Save for future searches toggle */}
+          <label className="flex items-center justify-between py-4 cursor-pointer select-none">
+            <span className="text-body text-slateGray">Save filters for future searches</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={saveForNext}
+              onClick={() => setSaveForNext(v => !v)}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors ${saveForNext ? 'bg-uclaBlue' : 'bg-gray-300'}`}
+            >
+              <span className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${saveForNext ? 'translate-x-5' : 'translate-x-0.5'}`} />
+            </button>
+          </label>
         </div>
 
-        {/* Save + Apply (Fixed) */}
-        <div className="fixed bottom-0 left-0 right-0 px-6 pt-4 pb-safe app-container bg-[#F8FAFC] border-t border-[#E2E8F0]">
-          {/* Save filters row */}
-          <button
-            onClick={handleSaveFilters}
-            className="w-full flex items-center justify-center gap-2 py-2.5 mb-3 rounded-xl border border-[#E2E8F0] bg-white text-body text-slateGray font-medium hover:bg-gray-50 active:scale-[0.98] transition-all duration-100"
-          >
-            {savedAnim ? (
-              <>
-                <span className="animate-checkPop text-uclaBlue">✓</span>
-                <span className="text-uclaBlue font-medium">Saved!</span>
-              </>
-            ) : (
-              <>
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-slateGray">
-                  <path d="M3 2C2.44772 2 2 2.44772 2 3V12C2 12.5523 2.44772 13 3 13H12C12.5523 13 13 12.5523 13 12V5.41421C13 5.14899 12.8946 4.89464 12.7071 4.70711L10.2929 2.29289C10.1054 2.10536 9.85101 2 9.58579 2H3ZM4 3H9V5.5C9 5.77614 8.77614 6 8.5 6H4.5C4.22386 6 4 5.77614 4 5.5V3ZM5 3H8V5H5V3ZM4 8H11V12H4V8Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
-                </svg>
-                <span>Save filters for next time</span>
-              </>
-            )}
-          </button>
-
+        {/* Apply (Fixed) */}
+        <div className="fixed bottom-0 left-0 right-0 p-6 pb-safe app-container">
           <button
             onClick={handleApply}
             className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated active:scale-[0.98] transition-transform duration-100"
