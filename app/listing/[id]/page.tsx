@@ -140,8 +140,7 @@ export default function ListingDetailsPage() {
               <Icon
                 name="bookmark"
                 size={22}
-                className={isBookmarked ? 'text-uclaBlue' : 'text-darkSlate'}
-                fill={isBookmarked ? 'currentColor' : 'none'}
+                className={isBookmarked ? 'text-uclaBlue fill-uclaBlue' : 'text-darkSlate'}
               />
             </button>
           </div>
