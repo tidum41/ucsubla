@@ -184,19 +184,19 @@ export default function ListingDetailsPage() {
         <div className="flex flex-wrap items-center gap-2 mb-6">
           <div className="bg-tagBg border border-borderLight rounded-lg px-4 py-[7px] flex items-center gap-1.5">
             <Icon name="bed.double.fill" size={18} className="text-uclaBlue" />
-            <span className="text-body text-darkSlate capitalize font-medium">
+            <span className="text-body text-darkSlate capitalize" style={{ fontWeight: 450 }}>
               {listing.roomType === 'triple+' ? 'Triple+' : listing.roomType}
             </span>
           </div>
           <div className="bg-tagBg border border-borderLight rounded-lg px-4 py-[7px] flex items-center gap-1.5">
             <Icon name="shower.fill" size={18} className="text-uclaBlue" />
-            <span className="text-body text-darkSlate capitalize font-medium">
+            <span className="text-body text-darkSlate capitalize" style={{ fontWeight: 450 }}>
               {listing.bathroomType}
             </span>
           </div>
           <div className="bg-tagBg border border-borderLight rounded-lg px-4 py-[7px] flex items-center gap-1.5">
             <Icon name="calendar" size={18} className="text-uclaBlue" />
-            <span className="text-body text-darkSlate font-medium">
+            <span className="text-body text-darkSlate" style={{ fontWeight: 450 }}>
               {formatDateRange(listing.moveInDate, listing.moveOutDate)}
             </span>
           </div>
