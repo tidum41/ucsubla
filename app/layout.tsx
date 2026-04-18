@@ -1,7 +1,6 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 import { BookmarkProvider } from "@/lib/BookmarkContext";
-import { Agentation } from "agentation";
 
 export const metadata: Metadata = {
   title: "BruinLease - UCLA Subleasing",
@@ -12,9 +11,6 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "BruinLease",
   },
-};
-
-export const viewport: Viewport = {
   themeColor: "#F8FAFC",
 };
 
@@ -30,12 +26,12 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="theme-color" content="#F8FAFC" />
       </head>
       <body className="antialiased touch-pan-y">
         <BookmarkProvider>
           {children}
         </BookmarkProvider>
-        {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>
   );

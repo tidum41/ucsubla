@@ -79,8 +79,7 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
               <Icon
                 name="bookmark"
                 size={20}
-                className={isBookmarked ? 'text-uclaBlue' : 'text-darkSlate'}
-                fill={isBookmarked ? 'currentColor' : 'none'}
+                className={isBookmarked ? 'text-uclaBlue fill-uclaBlue' : 'text-darkSlate'}
                 strokeWidth={2}
               />
             </button>
