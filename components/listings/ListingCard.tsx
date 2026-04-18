@@ -17,7 +17,6 @@ interface ListingCardProps {
 export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, index = 0 }: ListingCardProps) {
   const router = useRouter();
   const [imageError, setImageError] = useState(false);
-  const [bookmarkAnim, setBookmarkAnim] = useState(false);
 
   const handleCardClick = () => {
     router.push(`/listing/${listing.id}`);
@@ -26,8 +25,6 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onBookmarkToggle(listing.id);
-    setBookmarkAnim(true);
-    setTimeout(() => setBookmarkAnim(false), 450);
   };
 
   return (
@@ -73,7 +70,7 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
             </h3>
             <button
               onClick={handleBookmarkClick}
-              className={`flex-shrink-0 p-0 transition-transform ${bookmarkAnim ? 'animate-bookmarkPop' : ''}`}
+              className="flex-shrink-0 p-0"
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
               <Icon
