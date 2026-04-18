@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Bookmark as BookmarkIcon } from 'lucide-react';
 import Icon from '@/components/common/Icon';
 import ImageCarousel from '@/components/listings/ImageCarousel';
 import ReviewCard from '@/components/reviews/ReviewCard';
@@ -137,10 +138,10 @@ export default function ListingDetailsPage() {
               className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
-              <Icon
-                name="bookmark"
+              <BookmarkIcon
                 size={22}
-                className={isBookmarked ? 'text-uclaBlue fill-uclaBlue' : 'text-darkSlate'}
+                className={isBookmarked ? 'text-uclaBlue' : 'text-darkSlate'}
+                fill={isBookmarked ? 'currentColor' : 'none'}
               />
             </button>
           </div>
@@ -279,7 +280,7 @@ export default function ListingDetailsPage() {
               value={composeText}
               onChange={(e) => setComposeText(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSendMessage(); }}
-              placeholder="Write your message to Aaron..."
+              placeholder="Ask for more info..."
               rows={4}
               className="w-full bg-[#F8FAFC] border border-borderLight rounded-xl px-4 py-3 text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-1 focus:ring-uclaBlue resize-none"
               style={{ fontSize: '16px', lineHeight: '1.5' }}
