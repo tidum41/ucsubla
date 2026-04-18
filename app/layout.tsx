@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { BookmarkProvider } from "@/lib/BookmarkContext";
+import { Agentation } from "agentation";
 
 export const metadata: Metadata = {
   title: "BruinLease - UCLA Subleasing",
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "BruinLease",
   },
+};
+
+export const viewport: Viewport = {
   themeColor: "#F8FAFC",
 };
 
@@ -32,6 +36,7 @@ export default function RootLayout({
         <BookmarkProvider>
           {children}
         </BookmarkProvider>
+        {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>
   );
