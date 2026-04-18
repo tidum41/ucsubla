@@ -102,19 +102,19 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
           <div className="flex flex-wrap items-center gap-2 pt-3">
             <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
               <Icon name="bed.double.fill" size={18} className="text-uclaBlue" />
-              <span className="text-tiny text-darkSlate capitalize font-normal">
+              <span className="text-tiny text-darkSlate capitalize font-medium">
                 {listing.roomType === 'triple+' ? 'Triple+' : listing.roomType}
               </span>
             </div>
             <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
               <Icon name="shower.fill" size={18} className="text-uclaBlue" />
-              <span className="text-tiny text-darkSlate capitalize font-normal">
+              <span className="text-tiny text-darkSlate capitalize font-medium">
                 {listing.bathroomType}
               </span>
             </div>
             <div className="bg-tagBg border border-borderLight rounded-md px-[11px] py-[7px] flex items-center gap-1.5">
               <Icon name="calendar" size={18} className="text-uclaBlue" />
-              <span className="text-tiny text-darkSlate font-normal">
+              <span className="text-tiny text-darkSlate font-medium">
                 {formatDateRange(listing.moveInDate, listing.moveOutDate)}
               </span>
             </div>
