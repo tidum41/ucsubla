@@ -80,9 +80,10 @@ export interface IconProps {
   size?: number;
   className?: string;
   strokeWidth?: number;
+  fill?: string;
 }
 
-export default function Icon({ name, size = 24, className = '', strokeWidth = 2 }: IconProps) {
+export default function Icon({ name, size = 24, className = '', strokeWidth = 2, fill }: IconProps) {
   const IconComponent = iconMap[name];
 
   if (!IconComponent) {
@@ -95,6 +96,7 @@ export default function Icon({ name, size = 24, className = '', strokeWidth = 2 
       size={size}
       className={className}
       strokeWidth={strokeWidth}
+      fill={fill}
     />
   );
 }
