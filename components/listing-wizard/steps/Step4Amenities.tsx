@@ -128,6 +128,7 @@ export default function Step4Amenities({ amenities, onToggleAmenity, onParkingCh
 
   return (
     <div className="flex flex-col gap-2 pb-4">
+      <p className="text-small text-lightSlate -mt-1 mb-1">All fields optional — add what applies</p>
 
       <AccordionSection title="Essentials" isOpen={open.essentials} onToggle={() => toggle('essentials')}>
         <div className="flex flex-wrap gap-2">

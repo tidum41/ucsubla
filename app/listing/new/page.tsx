@@ -67,6 +67,18 @@ export default function CreateListingPage() {
 
   const hasAutoFilledQuarters = useRef(false);
 
+  // Warn before navigating away mid-wizard
+  useEffect(() => {
+    const hasProgress = currentStep > 0 || formData.title !== initialFormData.title;
+    if (!hasProgress || showSharePrompt) return;
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [currentStep, formData.title, showSharePrompt]);
+
   // Clear previously demo-created listings on mount
   useEffect(() => {
     const version = localStorage.getItem('user-listings-demo-version');

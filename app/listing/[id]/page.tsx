@@ -9,7 +9,7 @@ import ReviewCard from '@/components/reviews/ReviewCard';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockListings, mockReviews, mockUser } from '@/lib/mockData';
 import { useBookmarks } from '@/lib/BookmarkContext';
-import { formatPrice, formatDateRange } from '@/lib/utils';
+import { formatPrice, formatDateRange, formatTimestamp } from '@/lib/utils';
 import type { Listing } from '@/lib/types';
 
 export default function ListingDetailsPage() {
@@ -22,6 +22,9 @@ export default function ListingDetailsPage() {
   const [showComposeModal, setShowComposeModal] = useState(false);
   const [composeText, setComposeText] = useState('');
   const [sendSuccess, setSendSuccess] = useState(false);
+  const [modalDragY, setModalDragY] = useState(0);
+  const [modalDragStart, setModalDragStart] = useState<number | null>(null);
+  const COMPOSE_MAX = 500;
 
   const handleBack = () => router.back();
 
@@ -179,6 +182,7 @@ export default function ListingDetailsPage() {
               <span className="text-body text-slateGray">Verified UCLA Student</span>
             </div>
           )}
+          <p className="text-small text-lightSlate">Posted {formatTimestamp(listing.createdAt)}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 mb-6">
@@ -251,7 +255,21 @@ export default function ListingDetailsPage() {
         style={{ background: 'rgba(0,0,0,0.4)' }}
         onClick={(e) => { if (e.target === e.currentTarget) { setShowComposeModal(false); setComposeText(''); } }}
       >
-        <div className="w-full max-w-[390px] bg-white rounded-2xl shadow-elevated overflow-hidden">
+        <div
+          className="w-full max-w-[390px] bg-white rounded-2xl shadow-elevated overflow-hidden transition-transform duration-150"
+          style={{ transform: `translateY(${modalDragY}px)` }}
+          onTouchStart={(e) => setModalDragStart(e.touches[0].clientY)}
+          onTouchMove={(e) => {
+            if (modalDragStart === null) return;
+            const delta = e.touches[0].clientY - modalDragStart;
+            if (delta > 0) setModalDragY(delta);
+          }}
+          onTouchEnd={() => {
+            if (modalDragY > 80) { setShowComposeModal(false); setComposeText(''); }
+            setModalDragY(0);
+            setModalDragStart(null);
+          }}
+        >
           {/* Header */}
           <div className="px-5 pt-5 pb-4 border-b border-borderLight">
             <div className="flex items-center gap-3">
@@ -278,13 +296,16 @@ export default function ListingDetailsPage() {
             <textarea
               autoFocus
               value={composeText}
-              onChange={(e) => setComposeText(e.target.value)}
+              onChange={(e) => setComposeText(e.target.value.slice(0, COMPOSE_MAX))}
               onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSendMessage(); }}
               placeholder="Ask for more info..."
               rows={4}
               className="w-full bg-[#F8FAFC] border border-borderLight rounded-xl px-4 py-3 text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-1 focus:ring-uclaBlue resize-none"
               style={{ fontSize: '16px', lineHeight: '1.5' }}
             />
+            <p className="text-right text-small text-lightSlate mt-1">
+              {composeText.length} / {COMPOSE_MAX}
+            </p>
           </div>
 
           {/* Actions */}

@@ -373,9 +373,10 @@ export default function FilterModal({
         <div className="fixed bottom-0 left-0 right-0 p-6 pb-safe app-container">
           <button
             onClick={handleApply}
-            className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated active:scale-[0.98] transition-transform duration-100"
+            disabled={resultCount === 0}
+            className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated active:scale-[0.98] transition-transform duration-100 disabled:opacity-50"
           >
-            Apply Filters
+            {resultCount === 0 ? 'No Listings Found' : `Show ${resultCount} Listing${resultCount === 1 ? '' : 's'}`}
           </button>
         </div>
       </div>

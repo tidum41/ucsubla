@@ -44,7 +44,9 @@ export default function BookmarksPage() {
     {/* Header — static, outside animated content */}
     <div className="blurHeader app-container">
       <div className="blurHeaderContent">
-        <h1 className="text-h1 text-darkSlate">Saved Listings</h1>
+        <h1 className="text-h1 text-darkSlate">
+          Saved Listings{isLoaded && bookmarkedListings.length > 0 ? ` (${bookmarkedListings.length})` : ''}
+        </h1>
       </div>
     </div>
 

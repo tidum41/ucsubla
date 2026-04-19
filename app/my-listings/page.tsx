@@ -12,6 +12,7 @@ import type { Listing } from '@/lib/types';
 export default function MyListingsPage() {
   const router = useRouter();
   const [listings, setListings] = useState<Listing[]>([]);
+  const [takenIds, setTakenIds] = useState<string[]>([]);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,6 +36,13 @@ export default function MyListingsPage() {
   };
 
   const isMockListing = (listingId: string) => mockListings.some((l) => l.id === listingId);
+
+  const handleMarkTaken = (listingId: string) => {
+    setTakenIds(prev =>
+      prev.includes(listingId) ? prev.filter(id => id !== listingId) : [...prev, listingId]
+    );
+    showToast(takenIds.includes(listingId) ? 'Listing marked as available' : 'Listing marked as taken');
+  };
 
   return (
     <div className="min-h-screen pb-24 bg-background app-container">
@@ -83,7 +91,7 @@ export default function MyListingsPage() {
         /* Listings */
         <div className="px-5 pt-4 space-y-3">
           {listings.map((listing) => (
-            <div key={listing.id} className="card overflow-hidden shadow-card border border-borderLight">
+            <div key={listing.id} className={`card overflow-hidden shadow-card border border-borderLight transition-opacity ${takenIds.includes(listing.id) ? 'opacity-50' : ''}`}>
               {/* Image strip */}
               {listing.images[0] && (
                 <Link href={`/listing/${listing.id}`}>
@@ -99,6 +107,11 @@ export default function MyListingsPage() {
                         {formatPrice(listing.price)}
                       </span>
                     </div>
+                    {takenIds.includes(listing.id) && (
+                      <div className="absolute top-3 right-3 bg-darkSlate/80 text-white text-[11px] font-medium px-2 py-0.5 rounded-full">
+                        Filled ✓
+                      </div>
+                    )}
                   </div>
                 </Link>
               )}
@@ -126,6 +139,16 @@ export default function MyListingsPage() {
                     className="flex-1 border border-border rounded-[14px] py-2 text-small font-medium text-darkSlate hover:bg-gray-50 transition-colors"
                   >
                     Edit
+                  </button>
+                  <button
+                    onClick={() => handleMarkTaken(listing.id)}
+                    className={`flex-1 border rounded-[14px] py-2 text-small font-medium transition-colors ${
+                      takenIds.includes(listing.id)
+                        ? 'border-uclaBlue/30 text-uclaBlue bg-uclaBlue/5 hover:bg-uclaBlue/10'
+                        : 'border-border text-slateGray hover:bg-gray-50'
+                    }`}
+                  >
+                    {takenIds.includes(listing.id) ? 'Filled ✓' : 'Mark Taken'}
                   </button>
                   {!isMockListing(listing.id) && (
                     <button

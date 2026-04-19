@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { BookmarkProvider } from "@/lib/BookmarkContext";
+import { Agentation } from "agentation";
 
 export const metadata: Metadata = {
   title: "BruinLease - UCLA Subleasing",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <BookmarkProvider>
           {children}
         </BookmarkProvider>
+        {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>
   );

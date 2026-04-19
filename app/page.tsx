@@ -7,7 +7,7 @@ import ListingCard from '@/components/listings/ListingCard';
 import FilterModal from '@/components/filters/FilterModal';
 import { mockListings } from '@/lib/mockData';
 import { useBookmarks } from '@/lib/BookmarkContext';
-import { searchListings, filterListings } from '@/lib/utils';
+import { searchListings, filterListings, countActiveFilters } from '@/lib/utils';
 import type { FilterState } from '@/lib/types';
 
 export default function Home() {
@@ -100,6 +100,7 @@ export default function Home() {
     <Header
       onFilterClick={handleFilterClick}
       onSearchChange={handleSearchChange}
+      activeFilterCount={countActiveFilters(filters)}
     />
     <div className="min-h-screen pb-28 bg-background app-container">
       {/* Spacer for fixed header */}
@@ -126,10 +127,25 @@ export default function Home() {
               />
             ))
           ) : (
-            <div className="text-center py-12">
+            <div className="text-center py-12 space-y-3">
               <p className="text-body text-slateGray">
-                No listings found matching your criteria.
+                No listings match your criteria.
               </p>
+              {countActiveFilters(filters) > 0 && (
+                <button
+                  onClick={() => {
+                    const reset: FilterState = {
+                      verifiedOnly: false, moveInDate: null, moveOutDate: null,
+                      quarters: [], maxRent: 4000, maxDistance: 4,
+                      roomTypes: [], bathroomTypes: [], roommatePreferences: [], amenities: {},
+                    };
+                    handleApplyFilters(reset);
+                  }}
+                  className="text-uclaBlue text-body font-medium underline underline-offset-2"
+                >
+                  Reset filters
+                </button>
+              )}
             </div>
           )}
         </div>

@@ -8,17 +8,21 @@ interface HeaderProps {
   onFilterClick?: () => void;
   onSearchChange?: (query: string) => void;
   hideSearch?: boolean;
+  activeFilterCount?: number;
 }
 
-export default function Header({ onFilterClick, onSearchChange, hideSearch = false }: HeaderProps) {
+export default function Header({ onFilterClick, onSearchChange, hideSearch = false, activeFilterCount = 0 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
-    if (onSearchChange) {
-      onSearchChange(value);
-    }
+    if (onSearchChange) onSearchChange(value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    if (onSearchChange) onSearchChange('');
   };
 
   return (
@@ -26,46 +30,58 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
       <div className="blurHeaderLargeContent">
         {/* Logo and List button */}
         <div className="flex items-center justify-between mb-1.5">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="bg-uclaBlue rounded-lg p-1.5">
-            <Icon name="graduationcap.fill" size={20} className="text-white" />
-          </div>
-          <h1 className="text-h1 text-uclaBlue">BruinLease</h1>
-        </Link>
-
-        <Link
-          href="/listing/new"
-          className="bg-uclaBlue text-white rounded-[18px] px-2.5 py-1.5 flex items-center gap-1 text-small font-medium hover:bg-[#25579e] active:scale-95 transition-all duration-150"
-        >
-          <Icon name="plus" size={16} className="text-white" />
-          <span>List</span>
-        </Link>
-      </div>
-
-      {/* Search bar and filter button */}
-      {!hideSearch && (
-        <div className="flex items-center gap-0 bg-white border border-border rounded-full overflow-hidden">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              placeholder="Search streets (e.g. Kelton)..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="w-full bg-transparent pl-9 pr-4 py-2 text-body text-slateGray placeholder:text-lightSlate focus:outline-none"
-            />
-            <div className="absolute left-3 top-1/2 -translate-y-1/2">
-              <Icon name="search" size={18} className="text-lightSlate" strokeWidth={2} />
+          <Link href="/" className="flex items-center gap-2">
+            <div className="bg-uclaBlue rounded-lg p-1.5">
+              <Icon name="graduationcap.fill" size={20} className="text-white" />
             </div>
-          </div>
+            <h1 className="text-h1 text-uclaBlue">BruinLease</h1>
+          </Link>
 
-          <button
-            onClick={onFilterClick}
-            className="px-3 py-2 hover:bg-gray-50 transition-colors border-l border-border"
+          <Link
+            href="/listing/new-classic"
+            className="bg-uclaBlue text-white rounded-[18px] px-2.5 py-1.5 flex items-center gap-1 text-small font-medium hover:bg-[#25579e] active:scale-95 transition-all duration-150"
           >
-            <Icon name="slider.horizontal.3" size={20} className="text-slateGray" strokeWidth={2} />
-          </button>
+            <Icon name="plus" size={16} className="text-white" />
+            <span>List</span>
+          </Link>
         </div>
-      )}
+
+        {/* Search bar and filter button */}
+        {!hideSearch && (
+          <div className="flex items-center gap-0 bg-white border border-border rounded-full overflow-hidden">
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                placeholder="Search streets (e.g. Kelton)..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full bg-transparent pl-9 pr-8 py-2 text-body text-slateGray placeholder:text-lightSlate focus:outline-none"
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                <Icon name="search" size={18} className="text-lightSlate" strokeWidth={2} />
+              </div>
+              {searchQuery.length > 0 && (
+                <button
+                  onClick={handleClearSearch}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-gray-100 transition-colors"
+                  aria-label="Clear search"
+                >
+                  <Icon name="xmark" size={14} className="text-lightSlate" />
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={onFilterClick}
+              className="relative px-3 py-2 hover:bg-gray-50 transition-colors border-l border-border"
+            >
+              <Icon name="slider.horizontal.3" size={20} className="text-slateGray" strokeWidth={2} />
+              {activeFilterCount > 0 && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-uclaBlue" />
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

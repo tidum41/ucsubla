@@ -87,6 +87,13 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
           ))}
         </div>
 
+        {/* Image counter */}
+        {images.length > 1 && (
+          <div className="absolute top-3 right-3 bg-black/50 text-white text-[11px] font-medium px-2 py-0.5 rounded-full pointer-events-none">
+            {currentIndex + 1} / {images.length}
+          </div>
+        )}
+
         {/* Navigation Arrows */}
         {images.length > 1 && (
           <>
