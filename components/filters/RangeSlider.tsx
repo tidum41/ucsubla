@@ -80,8 +80,8 @@ export default function RangeSlider({
       <style jsx>{`
         .slider-thumb::-webkit-slider-thumb {
           appearance: none;
-          width: 22px;
-          height: 22px;
+          width: 18px;
+          height: 18px;
           border-radius: 50%;
           background: white;
           border: 2px solid #2d68c4;
@@ -90,8 +90,8 @@ export default function RangeSlider({
         }
 
         .slider-thumb::-moz-range-thumb {
-          width: 22px;
-          height: 22px;
+          width: 18px;
+          height: 18px;
           border-radius: 50%;
           background: white;
           border: 2px solid #2d68c4;
