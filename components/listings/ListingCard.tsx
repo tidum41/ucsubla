@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { Bookmark as BookmarkIcon } from 'lucide-react';
 import Icon from '../common/Icon';
 import { formatPrice, formatDateRange } from '@/lib/utils';
 import type { Listing } from '@/lib/types';
@@ -73,10 +74,10 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
               className="flex-shrink-0 p-0"
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
-              <Icon
-                name="bookmark"
+              <BookmarkIcon
                 size={20}
-                className={isBookmarked ? 'text-uclaBlue fill-uclaBlue' : 'text-darkSlate'}
+                className={isBookmarked ? 'text-uclaBlue' : 'text-darkSlate'}
+                fill={isBookmarked ? 'currentColor' : 'none'}
                 strokeWidth={2}
               />
             </button>

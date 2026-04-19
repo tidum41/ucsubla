@@ -48,7 +48,9 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
 
         {/* Search bar and filter button */}
         {!hideSearch && (
-          <div className="flex items-center gap-2">
+          <div className={`flex items-center bg-white border rounded-full overflow-hidden transition-colors ${
+            activeFilterCount > 0 ? 'border-uclaBlue' : 'border-border'
+          }`}>
             {/* Search input */}
             <div className="relative flex-1">
               <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -59,12 +61,12 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
                 placeholder="Search streets, e.g. Kelton..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full h-9 bg-white border border-border rounded-lg pl-8 pr-8 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-2 focus:ring-uclaBlue/30 focus:border-uclaBlue transition-colors"
+                className="w-full bg-transparent pl-8 pr-3 py-2 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none"
               />
               {searchQuery.length > 0 && (
                 <button
                   onClick={handleClearSearch}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-lightSlate hover:text-slateGray transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-lightSlate hover:text-slateGray transition-colors"
                   aria-label="Clear search"
                 >
                   <Icon name="xmark" size={14} />
@@ -72,13 +74,13 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
               )}
             </div>
 
-            {/* Filter button */}
+            {/* Filter button — divider + icon */}
             <button
               onClick={onFilterClick}
-              className={`h-9 w-9 flex items-center justify-center rounded-lg border transition-colors flex-shrink-0 ${
+              className={`px-3 py-2 flex items-center justify-center border-l transition-colors flex-shrink-0 ${
                 activeFilterCount > 0
-                  ? 'border-uclaBlue bg-uclaBlue/5 text-uclaBlue'
-                  : 'border-border bg-white text-slateGray hover:bg-gray-50'
+                  ? 'border-uclaBlue text-uclaBlue'
+                  : 'border-border text-slateGray hover:bg-gray-50'
               }`}
             >
               <Icon name="slider.horizontal.3" size={16} strokeWidth={2} className="text-current" />

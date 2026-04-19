@@ -72,9 +72,11 @@ export default function BookmarksPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <Icon name="bookmark" size={64} className="text-lightSlate mx-auto mb-4" />
-            <h2 className="text-h2 text-darkSlate mb-2">No saved listings</h2>
+          <div className="flex flex-col items-center justify-center py-24 text-center px-8">
+            <div className="w-16 h-16 rounded-full bg-uclaBlue/10 flex items-center justify-center mb-4">
+              <Icon name="bookmark" size={28} className="text-uclaBlue" />
+            </div>
+            <h3 className="text-h2 text-darkSlate mb-1">No saved listings</h3>
             <p className="text-body text-slateGray">
               Bookmark listings to save them for later
             </p>
