@@ -5,16 +5,16 @@ import Icon from '../common/Icon';
 import RangeSlider from './RangeSlider';
 import ToggleSwitch from './ToggleSwitch';
 import ChipGroup from './ChipGroup';
-import { formatPrice, countActiveFilters } from '@/lib/utils';
+import { formatPrice, countActiveFilters, filterListings } from '@/lib/utils';
 import DatePickerField from '../common/DatePickerField';
-import type { FilterState, Quarter, RoomType, BathroomType, RoommatePreference } from '@/lib/types';
+import type { FilterState, Quarter, RoomType, BathroomType, RoommatePreference, Listing } from '@/lib/types';
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
   filters: FilterState;
   onApply: (filters: FilterState) => void;
-  resultCount: number;
+  listings: Listing[];
 }
 
 export default function FilterModal({
@@ -22,12 +22,14 @@ export default function FilterModal({
   onClose,
   filters: initialFilters,
   onApply,
-  resultCount,
+  listings,
 }: FilterModalProps) {
   const [filters, setFilters] = useState<FilterState>(initialFilters);
   const [saveForNext, setSaveForNext] = useState(() => {
     try { return !!localStorage.getItem('ucsubla-saved-filters'); } catch { return false; }
   });
+
+  const liveCount = filterListings(listings, filters).length;
 
   useEffect(() => {
     setFilters(initialFilters);
@@ -373,10 +375,10 @@ export default function FilterModal({
         <div className="fixed bottom-0 left-0 right-0 p-6 pb-safe app-container">
           <button
             onClick={handleApply}
-            disabled={resultCount === 0}
+            disabled={liveCount === 0}
             className="w-full btn-primary py-4 rounded-xl text-h3 shadow-elevated active:scale-[0.98] transition-transform duration-100 disabled:opacity-50"
           >
-            {resultCount === 0 ? 'No Listings Found' : `Show ${resultCount} Listing${resultCount === 1 ? '' : 's'}`}
+            {liveCount === 0 ? 'No Listings Found' : `Show ${liveCount} Listing${liveCount === 1 ? '' : 's'}`}
           </button>
         </div>
       </div>

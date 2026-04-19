@@ -157,7 +157,7 @@ export default function Home() {
         onClose={() => setIsFilterOpen(false)}
         filters={filters}
         onApply={handleApplyFilters}
-        resultCount={displayedListings.length}
+        listings={allListings}
       />
     </div>
     <BottomNav />

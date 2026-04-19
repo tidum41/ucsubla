@@ -38,7 +38,7 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
           </Link>
 
           <Link
-            href="/listing/new-classic"
+            href="/listing/new"
             className="bg-uclaBlue text-white rounded-[18px] px-2.5 py-1.5 flex items-center gap-1 text-small font-medium hover:bg-[#25579e] active:scale-95 transition-all duration-150"
           >
             <Icon name="plus" size={16} className="text-white" />
@@ -48,37 +48,40 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
 
         {/* Search bar and filter button */}
         {!hideSearch && (
-          <div className="flex items-center gap-0 bg-white border border-border rounded-full overflow-hidden">
-            <div className="flex-1 relative">
+          <div className="flex items-center gap-2">
+            {/* Search input */}
+            <div className="relative flex-1">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <Icon name="search" size={16} className="text-lightSlate" strokeWidth={2} />
+              </div>
               <input
                 type="text"
-                placeholder="Search streets (e.g. Kelton)..."
+                placeholder="Search streets, e.g. Kelton..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full bg-transparent pl-9 pr-8 py-2 text-body text-slateGray placeholder:text-lightSlate focus:outline-none"
+                className="w-full h-9 bg-white border border-border rounded-lg pl-8 pr-8 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-2 focus:ring-uclaBlue/30 focus:border-uclaBlue transition-colors"
               />
-              <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <Icon name="search" size={18} className="text-lightSlate" strokeWidth={2} />
-              </div>
               {searchQuery.length > 0 && (
                 <button
                   onClick={handleClearSearch}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-gray-100 transition-colors"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-lightSlate hover:text-slateGray transition-colors"
                   aria-label="Clear search"
                 >
-                  <Icon name="xmark" size={14} className="text-lightSlate" />
+                  <Icon name="xmark" size={14} />
                 </button>
               )}
             </div>
 
+            {/* Filter button */}
             <button
               onClick={onFilterClick}
-              className="relative px-3 py-2 hover:bg-gray-50 transition-colors border-l border-border"
+              className={`h-9 w-9 flex items-center justify-center rounded-lg border transition-colors flex-shrink-0 ${
+                activeFilterCount > 0
+                  ? 'border-uclaBlue bg-uclaBlue/5 text-uclaBlue'
+                  : 'border-border bg-white text-slateGray hover:bg-gray-50'
+              }`}
             >
-              <Icon name="slider.horizontal.3" size={20} className="text-slateGray" strokeWidth={2} />
-              {activeFilterCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-uclaBlue" />
-              )}
+              <Icon name="slider.horizontal.3" size={16} strokeWidth={2} className="text-current" />
             </button>
           </div>
         )}
