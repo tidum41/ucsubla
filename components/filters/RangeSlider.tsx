@@ -80,23 +80,23 @@ export default function RangeSlider({
       <style jsx>{`
         .slider-thumb::-webkit-slider-thumb {
           appearance: none;
-          width: 12px;
-          height: 12px;
+          width: 22px;
+          height: 22px;
           border-radius: 50%;
           background: white;
           border: 2px solid #2d68c4;
           cursor: pointer;
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         }
 
         .slider-thumb::-moz-range-thumb {
-          width: 12px;
-          height: 12px;
+          width: 22px;
+          height: 22px;
           border-radius: 50%;
           background: white;
           border: 2px solid #2d68c4;
           cursor: pointer;
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         }
       `}</style>
     </div>
