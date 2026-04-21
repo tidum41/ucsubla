@@ -266,7 +266,7 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
@@ -286,7 +286,7 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
@@ -306,7 +306,7 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
@@ -326,7 +326,7 @@ export default function FilterModal({
                 <button
                   key={option.key}
                   onClick={() => toggleAmenity(option.key)}
-                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
+                  className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
                     filters.amenities[option.key as keyof typeof filters.amenities]
                       ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
                       : 'bg-white border-[#E2E8F0] text-slateGray font-medium'
