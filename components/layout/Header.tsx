@@ -48,9 +48,7 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
 
         {/* Search bar and filter button */}
         {!hideSearch && (
-          <div className={`flex items-center bg-white border rounded-full overflow-hidden transition-colors ${
-            activeFilterCount > 0 ? 'border-uclaBlue' : 'border-border'
-          }`}>
+          <div className="flex items-center bg-white border border-border rounded-full overflow-hidden">
             {/* Search input */}
             <div className="relative flex-1">
               <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
