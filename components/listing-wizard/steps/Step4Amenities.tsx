@@ -44,7 +44,7 @@ function AmenityChip({ label, active, onClick }: { label: string; active: boolea
     <button
       type="button"
       onClick={onClick}
-      className={`px-4 py-2 rounded-xl border transition-colors duration-75 active:scale-[0.96] transition-transform ${
+      className={`px-4 py-2 rounded-xl border transition-colors duration-75 ${
         active
           ? 'bg-uclaBlue/10 border-uclaBlue text-uclaBlue font-medium'
           : 'bg-white border-[#E2E8F0] text-slateGray font-medium'

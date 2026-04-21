@@ -60,7 +60,7 @@ export default function ChipGroup({
               key={option.value}
               type="button"
               onClick={() => handleToggle(option.value)}
-              className={`px-4 py-2 border transition-colors duration-75 active:scale-[0.96] transition-transform flex items-center gap-2 ${
+              className={`px-4 py-2 border transition-colors duration-75 flex items-center gap-2 ${
                 pill ? 'rounded-full justify-center' : 'rounded-lg'
               } ${
                 isSelected
