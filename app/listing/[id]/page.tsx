@@ -81,6 +81,7 @@ export default function ListingDetailsPage() {
 
     const existingConvos = JSON.parse(localStorage.getItem('uc-conversations') || '[]');
     const existingMsgs = JSON.parse(localStorage.getItem('uc-messages') || '[]');
+    localStorage.setItem('uc-chat-version', '6'); // prevent messages page from wiping this on first visit
     localStorage.setItem('uc-conversations', JSON.stringify([...existingConvos, newConversation]));
     localStorage.setItem('uc-messages', JSON.stringify([...existingMsgs, newMessage]));
 
