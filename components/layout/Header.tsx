@@ -75,10 +75,8 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
             {/* Filter button — divider + icon */}
             <button
               onClick={onFilterClick}
-              className={`px-3 py-2 flex items-center justify-center border-l transition-colors flex-shrink-0 ${
-                activeFilterCount > 0
-                  ? 'border-uclaBlue text-uclaBlue'
-                  : 'border-border text-slateGray hover:bg-gray-50'
+              className={`px-3 py-2 flex items-center justify-center border-l border-border transition-colors flex-shrink-0 ${
+                activeFilterCount > 0 ? 'text-uclaBlue' : 'text-slateGray hover:bg-gray-50'
               }`}
             >
               <Icon name="slider.horizontal.3" size={16} strokeWidth={2} className="text-current" />
