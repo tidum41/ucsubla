@@ -59,7 +59,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
               href={review.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-tiny text-uclaBlue hover:underline"
+              className="text-tiny text-uclaBlue active:underline"
             >
               View on {sourceLabel}
             </a>
@@ -79,7 +79,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
       {shouldTruncate && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-small text-uclaBlue font-medium mt-2 hover:underline"
+          className="text-small text-uclaBlue font-medium mt-2 active:underline"
         >
           {isExpanded ? 'Show less' : 'Read more'}
         </button>

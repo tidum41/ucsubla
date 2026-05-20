@@ -8,6 +8,7 @@ import ImageCarousel from '@/components/listings/ImageCarousel';
 import ReviewCard from '@/components/reviews/ReviewCard';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockListings, mockReviews, mockUser } from '@/lib/mockData';
+import { useMessages } from '@/lib/MessagesContext';
 import { useBookmarks } from '@/lib/BookmarkContext';
 import { formatPrice, formatDateRange, formatTimestamp } from '@/lib/utils';
 import type { Listing } from '@/lib/types';
@@ -17,6 +18,7 @@ export default function ListingDetailsPage() {
   const router = useRouter();
   const listingId = params.id as string;
   const { bookmarkedIds, toggleBookmark } = useBookmarks();
+  const { addConversation, addMessage, setPendingConvId } = useMessages();
 
   const [listing, setListing] = useState<Listing | null>(null);
   const [showComposeModal, setShowComposeModal] = useState(false);
@@ -79,11 +81,9 @@ export default function ListingDetailsPage() {
       unreadCount: 0,
     };
 
-    const existingConvos = JSON.parse(localStorage.getItem('uc-conversations') || '[]');
-    const existingMsgs = JSON.parse(localStorage.getItem('uc-messages') || '[]');
-    localStorage.setItem('uc-chat-version', '6'); // prevent messages page from wiping this on first visit
-    localStorage.setItem('uc-conversations', JSON.stringify([...existingConvos, newConversation]));
-    localStorage.setItem('uc-messages', JSON.stringify([...existingMsgs, newMessage]));
+    addConversation(newConversation);
+    addMessage(newMessage);
+    setPendingConvId(convId);
 
     setSendSuccess(true);
     setTimeout(() => {
@@ -91,7 +91,7 @@ export default function ListingDetailsPage() {
       setComposeText('');
       setSendSuccess(false);
       router.push('/messages');
-    }, 900);
+    }, 500);
   };
 
   if (!listing) {
@@ -123,7 +123,7 @@ export default function ListingDetailsPage() {
         <div className="blurHeaderWithNavContent">
           <button
             onClick={handleBack}
-            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-3 active:bg-gray-100 rounded-full transition-colors"
             aria-label="Go back"
           >
             <Icon name="chevron.left" size={24} className="text-darkSlate" />
@@ -132,14 +132,14 @@ export default function ListingDetailsPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleShare}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-3 active:bg-gray-100 rounded-full transition-colors"
               aria-label="Share listing"
             >
               <Icon name="square.and.arrow.up" size={22} className="text-darkSlate" strokeWidth={1.5} />
             </button>
             <button
               onClick={() => toggleBookmark(listingId)}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-3 active:bg-gray-100 rounded-full transition-colors"
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
               <BookmarkIcon
@@ -159,11 +159,11 @@ export default function ListingDetailsPage() {
 
       <div className="px-5 pt-4 pb-24">
         <div className="mb-6">
-          <h1 className="text-[20px] leading-[28px] font-medium text-darkSlate mb-2">
+          <h1 className="text-h1 text-darkSlate mb-2">
             {listing.title}
           </h1>
           <div className="flex items-baseline gap-2">
-            <span className="text-[20px] leading-7 font-medium text-uclaBlue">
+            <span className="text-h1 text-uclaBlue">
               {formatPrice(listing.price)}
             </span>
             <span className="text-body text-slateGray">/mo</span>
@@ -235,16 +235,18 @@ export default function ListingDetailsPage() {
         )}
       </div>
 
-      {/* Message Button */}
-      <div className="fixed bottom-20 left-0 right-0 px-6 py-4 app-container">
-        <button
-          onClick={() => setShowComposeModal(true)}
-          className="w-full btn-primary shadow-elevated flex items-center justify-center gap-2"
-        >
-          <Icon name="paperplane" size={18} className="text-white" />
-          <span>Message</span>
-        </button>
-      </div>
+      {/* Message Button — hidden on own listings */}
+      {listing.listerId !== mockUser.id && (
+        <div className="fixed bottom-20 left-0 right-0 px-6 py-4 app-container">
+          <button
+            onClick={() => setShowComposeModal(true)}
+            className="w-full btn-primary shadow-elevated flex items-center justify-center gap-2"
+          >
+            <Icon name="paperplane" size={18} className="text-white" />
+            <span>Message</span>
+          </button>
+        </div>
+      )}
 
       <BottomNav />
     </div>
@@ -285,7 +287,7 @@ export default function ListingDetailsPage() {
               </div>
               <button
                 onClick={() => { setShowComposeModal(false); setComposeText(''); }}
-                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-3 active:bg-gray-100 rounded-full transition-colors"
               >
                 <Icon name="xmark" size={18} className="text-slateGray" />
               </button>
@@ -313,18 +315,18 @@ export default function ListingDetailsPage() {
           <div className="px-5 pb-5 flex gap-3">
             <button
               onClick={() => { setShowComposeModal(false); setComposeText(''); }}
-              className="flex-1 py-3 rounded-[18px] border border-gray-200 text-body text-slateGray font-medium hover:bg-gray-50 transition-colors"
+              className="flex-1 py-3 rounded-[18px] border border-gray-200 text-body text-slateGray font-medium active:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSendMessage}
               disabled={!composeText.trim() || sendSuccess}
-              className="flex-1 py-3 rounded-[18px] bg-uclaBlue text-white text-body font-medium flex items-center justify-center gap-2 disabled:opacity-40 hover:bg-[#25579e] transition-colors"
+              className="flex-1 py-3 rounded-[18px] bg-uclaBlue text-white text-body font-medium flex items-center justify-center gap-2 disabled:opacity-40 active:bg-[#25579e] transition-colors"
             >
               {sendSuccess ? (
                 <>
-                  <Icon name="checkmark.seal.fill" size={16} className="text-white" />
+                  <Icon name="checkmark" size={16} className="text-white" strokeWidth={2.5} />
                   <span>Sent!</span>
                 </>
               ) : (

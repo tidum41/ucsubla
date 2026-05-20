@@ -58,7 +58,7 @@ export default function MyListingsPage() {
         <div className="blurHeaderWithNavContent">
           <button
             onClick={() => router.back()}
-            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors -ml-1.5"
+            className="p-3 active:bg-gray-100 rounded-full transition-colors -ml-1.5"
           >
             <Icon name="chevron.left" size={24} className="text-darkSlate" />
           </button>
@@ -103,7 +103,7 @@ export default function MyListingsPage() {
                     />
                     {/* Price pill */}
                     <div className="absolute top-3 left-3 bg-white rounded-full px-3 py-1 shadow-card">
-                      <span className="text-sm font-semibold text-uclaBlue">
+                      <span className="text-body font-semibold text-uclaBlue">
                         {formatPrice(listing.price)}
                       </span>
                     </div>
@@ -136,24 +136,24 @@ export default function MyListingsPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => showToast('Editing listings coming soon')}
-                    className="flex-1 border border-border rounded-[14px] py-2 text-small font-medium text-darkSlate hover:bg-gray-50 transition-colors"
+                    className="flex-1 border border-border rounded-[14px] py-2.5 text-small font-medium text-darkSlate active:bg-gray-50 transition-colors min-h-[44px]"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleMarkTaken(listing.id)}
-                    className={`flex-1 border rounded-[14px] py-2 text-small font-medium transition-colors ${
+                    className={`flex-1 border rounded-[14px] py-2.5 text-small font-medium transition-colors ${
                       takenIds.includes(listing.id)
-                        ? 'border-uclaBlue/30 text-uclaBlue bg-uclaBlue/5 hover:bg-uclaBlue/10'
-                        : 'border-border text-slateGray hover:bg-gray-50'
-                    }`}
+                        ? 'border-uclaBlue/30 text-uclaBlue bg-uclaBlue/5 active:bg-uclaBlue/10'
+                        : 'border-border text-slateGray active:bg-gray-50'
+                    } min-h-[44px]`}
                   >
                     {takenIds.includes(listing.id) ? 'Filled ✓' : 'Mark Taken'}
                   </button>
                   {!isMockListing(listing.id) && (
                     <button
                       onClick={() => handleDelete(listing.id)}
-                      className="flex-1 border border-red-200 rounded-[14px] py-2 text-small font-medium text-red-500 hover:bg-red-50 transition-colors"
+                      className="flex-1 border border-red-200 rounded-[14px] py-2.5 text-small font-medium text-red-500 active:bg-red-50 transition-colors min-h-[44px]"
                     >
                       Delete
                     </button>
@@ -166,7 +166,7 @@ export default function MyListingsPage() {
           {/* Create another */}
           <Link
             href="/listing/new"
-            className="flex items-center justify-center gap-2 w-full border-2 border-dashed border-border rounded-2xl py-4 text-body text-slateGray hover:border-uclaBlue hover:text-uclaBlue transition-colors"
+            className="flex items-center justify-center gap-2 w-full border-2 border-dashed border-border rounded-2xl py-4 text-body text-slateGray active:border-uclaBlue active:text-uclaBlue transition-colors min-h-[44px]"
           >
             <Icon name="plus" size={20} className="text-current" />
             <span>Add another listing</span>

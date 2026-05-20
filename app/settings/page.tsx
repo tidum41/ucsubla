@@ -67,7 +67,7 @@ export default function SettingsPage() {
   const Row = ({ label, onTap }: { label: string; onTap: () => void }) => (
     <button
       onClick={onTap}
-      className="flex items-center justify-between w-full py-3.5 px-4 hover:bg-gray-50 transition-colors"
+      className="flex items-center justify-between w-full py-3.5 px-4 active:bg-gray-50 transition-colors"
     >
       <span className="text-body text-darkSlate">{label}</span>
       <Icon name="chevron.right" size={18} className="text-lightSlate" />
@@ -88,7 +88,7 @@ export default function SettingsPage() {
         <div className="blurHeaderWithNavContent">
           <button
             onClick={() => router.back()}
-            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors -ml-1.5"
+            className="p-3 active:bg-gray-100 rounded-full transition-colors -ml-1.5"
           >
             <Icon name="chevron.left" size={24} className="text-darkSlate" />
           </button>

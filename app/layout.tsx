@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { BookmarkProvider } from "@/lib/BookmarkContext";
+import { MessagesProvider } from "@/lib/MessagesContext";
 import { Agentation } from "agentation";
 
 export const metadata: Metadata = {
@@ -31,7 +32,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased touch-pan-y">
         <BookmarkProvider>
-          {children}
+          <MessagesProvider>
+            {children}
+          </MessagesProvider>
         </BookmarkProvider>
         {process.env.NODE_ENV === "development" && <Agentation />}
       </body>

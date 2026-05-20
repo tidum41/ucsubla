@@ -54,7 +54,7 @@ export default function EditProfilePage() {
           >
             Cancel
           </button>
-          <h1 className="text-darkSlate" style={{ fontSize: '17px', fontWeight: 600, lineHeight: '22px' }}>
+          <h1 className="text-h3 font-semibold text-darkSlate">
             Edit Profile
           </h1>
           <button

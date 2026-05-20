@@ -39,7 +39,7 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
 
           <Link
             href="/listing/new"
-            className="bg-uclaBlue text-white rounded-[18px] px-2.5 py-1.5 flex items-center gap-1 text-small font-medium hover:bg-[#25579e] active:scale-95 transition-all duration-150"
+            className="bg-uclaBlue text-white rounded-[18px] px-2.5 py-1.5 flex items-center gap-1 text-small font-medium active:scale-95 active:bg-[#25579e] transition-all duration-150"
           >
             <Icon name="plus" size={16} className="text-white" />
             <span>List</span>
@@ -59,12 +59,12 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
                 placeholder="Search streets, e.g. Kelton..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full bg-transparent pl-8 pr-3 py-2 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none"
+                className="w-full bg-transparent pl-8 pr-3 py-2 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
               />
               {searchQuery.length > 0 && (
                 <button
                   onClick={handleClearSearch}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-lightSlate hover:text-slateGray transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-lightSlate active:text-slateGray transition-colors"
                   aria-label="Clear search"
                 >
                   <Icon name="xmark" size={14} />
@@ -75,11 +75,16 @@ export default function Header({ onFilterClick, onSearchChange, hideSearch = fal
             {/* Filter button — divider + icon */}
             <button
               onClick={onFilterClick}
-              className={`px-3 py-2 flex items-center justify-center border-l border-border transition-colors flex-shrink-0 ${
-                activeFilterCount > 0 ? 'text-uclaBlue' : 'text-slateGray hover:bg-gray-50'
+              className={`px-3 py-2 flex items-center justify-center border-l border-border transition-colors flex-shrink-0 relative ${
+                activeFilterCount > 0 ? 'text-uclaBlue' : 'text-slateGray'
               }`}
             >
               <Icon name="slider.horizontal.3" size={16} strokeWidth={2} className="text-current" />
+              {activeFilterCount > 0 && (
+                <span className="absolute top-1 right-1 min-w-[14px] h-[14px] bg-uclaBlue text-white text-[9px] font-semibold rounded-full flex items-center justify-center px-[3px] leading-none">
+                  {activeFilterCount}
+                </span>
+              )}
             </button>
           </div>
         )}

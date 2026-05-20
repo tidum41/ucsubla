@@ -2,43 +2,33 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Icon from '@/components/common/Icon';
 import BottomNav from '@/components/layout/BottomNav';
 import { mockListings, mockUser } from '@/lib/mockData';
+import { useMessages } from '@/lib/MessagesContext';
 import { formatTimestamp } from '@/lib/utils';
 import type { Message } from '@/lib/types';
 
 const PETER_PARKER_AVATAR = '/peter-parker.webp';
 
-interface StoredConversation {
-  id: string;
-  listingId: string;
-  participants: string[];
-  lastMessage: Message;
-  unreadCount: number;
-}
-
 export default function MessagesPage() {
   const router = useRouter();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messageText, setMessageText] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [conversations, setConversations] = useState<StoredConversation[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { conversations, messages, pendingConvId, addMessage, updateConversationLastMessage, markConversationRead, setPendingConvId } = useMessages();
+
+  // Auto-open pending conversation (from compose modal on listing page)
+  useEffect(() => {
+    if (pendingConvId) {
+      setSelectedConversationId(pendingConvId);
+      setPendingConvId(null);
+    }
+  }, [pendingConvId]);
 
   useEffect(() => {
-    // Clear any stale conversations from previous persona (Aaron Davis → Peter Parker)
-    const chatVersion = localStorage.getItem('uc-chat-version');
-    if (chatVersion !== '6') {
-      localStorage.removeItem('uc-conversations');
-      localStorage.removeItem('uc-messages');
-      localStorage.setItem('uc-chat-version', '6');
-    }
-    const storedConvos: StoredConversation[] = JSON.parse(localStorage.getItem('uc-conversations') || '[]');
-    const storedMsgs: Message[] = JSON.parse(localStorage.getItem('uc-messages') || '[]');
-    setConversations(storedConvos);
-    setMessages(storedMsgs);
     const t = setTimeout(() => setIsLoaded(true), 350);
     return () => clearTimeout(t);
   }, []);
@@ -52,6 +42,11 @@ export default function MessagesPage() {
     }
   }, [conversationMessages.length, selectedConversationId]);
 
+  const openConversation = (convId: string) => {
+    markConversationRead(convId);
+    setSelectedConversationId(convId);
+  };
+
   const handleSendMessage = () => {
     if (!messageText.trim() || !selectedConversationId) return;
     const newMessage: Message = {
@@ -63,17 +58,8 @@ export default function MessagesPage() {
       read: true,
     };
 
-    const updatedMessages = [...messages, newMessage];
-    setMessages(updatedMessages);
-    localStorage.setItem('uc-messages', JSON.stringify(updatedMessages));
-
-    // Update lastMessage in conversation
-    const updatedConvos = conversations.map((c) =>
-      c.id === selectedConversationId ? { ...c, lastMessage: newMessage } : c
-    );
-    setConversations(updatedConvos);
-    localStorage.setItem('uc-conversations', JSON.stringify(updatedConvos));
-
+    addMessage(newMessage);
+    updateConversationLastMessage(selectedConversationId, newMessage);
     setMessageText('');
   };
 
@@ -119,12 +105,15 @@ export default function MessagesPage() {
                   return (
                     <button
                       key={conversation.id}
-                      onClick={() => setSelectedConversationId(conversation.id)}
-                      className="w-full card shadow-card p-4 hover:bg-gray-50 transition-colors text-left"
+                      onClick={() => openConversation(conversation.id)}
+                      className="w-full card shadow-card p-4 active:bg-gray-50 transition-colors text-left"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-2 flex-shrink-0 flex items-center justify-center">
-                          {hasUnread && <span className="w-2 h-2 rounded-full bg-uclaBlue" />}
+                        {/* Unread dot — sits flush left of avatar */}
+                        <div className="w-[6px] flex-shrink-0 flex items-center justify-center">
+                          {hasUnread && (
+                            <span className="w-[6px] h-[6px] rounded-full bg-uclaBlue" />
+                          )}
                         </div>
 
                         {/* Peter Parker avatar */}
@@ -136,14 +125,14 @@ export default function MessagesPage() {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2 mb-0.5">
-                            <h3 className="text-h3 font-semibold text-darkSlate truncate">
+                            <h3 className={`text-h3 truncate ${hasUnread ? 'font-bold text-darkSlate' : 'font-semibold text-darkSlate'}`}>
                               {listing?.address || 'Unknown Listing'}
                             </h3>
-                            <span className="text-small text-slateGray flex-shrink-0">
+                            <span className={`text-small flex-shrink-0 ${hasUnread ? 'text-uclaBlue font-medium' : 'text-slateGray'}`}>
                               {formatTimestamp(conversation.lastMessage.timestamp)}
                             </span>
                           </div>
-                          <p className="text-small text-slateGray truncate">
+                          <p className={`text-small truncate ${hasUnread ? 'text-darkSlate font-medium' : 'text-slateGray'}`}>
                             {conversation.lastMessage.text}
                           </p>
                         </div>
@@ -175,32 +164,34 @@ export default function MessagesPage() {
   const listerName = 'Peter Parker';
   const listerVerified = true;
 
-  // Group messages by date
   const firstMessageDate = conversationMessages.length > 0
     ? formatMessageDate(conversationMessages[0].timestamp)
     : null;
 
   return (
     <>
-    <div className="min-h-screen bg-background app-container">
+    <div className="flex flex-col bg-background app-container" style={{ height: '100dvh' }}>
       {/* Chat Header */}
       <div className="blurHeaderWithNav app-container">
         <div className="blurHeaderWithNavContent">
           <button
             onClick={() => setSelectedConversationId(null)}
-            className="p-1.5 hover:bg-gray-100 rounded-full transition-colors -ml-1.5"
+            className="p-3 active:bg-gray-100 rounded-full transition-colors -ml-1.5"
             aria-label="Back to messages"
           >
             <Icon name="chevron.left" size={24} className="text-darkSlate" />
           </button>
 
-          <div className="flex items-center gap-3 flex-1 min-w-0">
+          {/* Center: avatar + listing address (tappable) + lister name */}
+          <Link
+            href={listing ? `/listing/${listing.id}` : '#'}
+            className="flex items-center gap-3 flex-1 min-w-0 active:opacity-70 transition-opacity"
+          >
             <img
               src={PETER_PARKER_AVATAR}
               alt="Peter Parker"
               className="w-10 h-10 rounded-full object-cover flex-shrink-0"
             />
-
             <div className="flex-1 min-w-0">
               <h2 className="text-h3 text-darkSlate truncate">
                 {listing?.address || 'Unknown Listing'}
@@ -214,7 +205,18 @@ export default function MessagesPage() {
                 )}
               </div>
             </div>
-          </div>
+          </Link>
+
+          {/* View listing button */}
+          {listing && (
+            <Link
+              href={`/listing/${listing.id}`}
+              className="p-2.5 active:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+              aria-label="View listing"
+            >
+              <Icon name="house" size={20} className="text-slateGray" />
+            </Link>
+          )}
         </div>
       </div>
 
@@ -222,22 +224,31 @@ export default function MessagesPage() {
       <div className="h-[60px]" style={{ marginTop: 'env(safe-area-inset-top)' }} />
 
       {/* Messages */}
-      <div className="overflow-y-auto px-5 py-6 pb-36 space-y-4">
-        {/* Date label — no lines */}
+      <div className="flex-1 overflow-y-auto px-5 py-6 pb-36 space-y-4">
+        {/* Date label */}
         {firstMessageDate && (
           <div className="flex justify-center mb-2">
-            <span className="text-[11px] text-lightSlate font-medium tracking-wide">{firstMessageDate}</span>
+            <span className="text-tiny text-lightSlate tracking-wide">{firstMessageDate}</span>
           </div>
         )}
 
         {conversationMessages.map((message) => {
           const isSentByMe = message.senderId === mockUser.id;
+          const timeStr = new Date(message.timestamp).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+          });
 
           return (
             <div
               key={message.id}
-              className={`flex ${isSentByMe ? 'justify-end' : 'justify-start'}`}
+              className={`flex flex-col ${isSentByMe ? 'items-end' : 'items-start'}`}
             >
+              {!isSentByMe && (
+                <span className="text-xs text-slateGray mb-1 px-1">
+                  {listerName} · {timeStr}
+                </span>
+              )}
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
                   isSentByMe
@@ -246,16 +257,11 @@ export default function MessagesPage() {
                 }`}
               >
                 <p className="text-body">{message.text}</p>
-                <span
-                  className={`text-xs mt-1 block ${
-                    isSentByMe ? 'text-white/70' : 'text-slateGray'
-                  }`}
-                >
-                  {new Date(message.timestamp).toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                  })}
-                </span>
+                {isSentByMe && (
+                  <span className="text-xs mt-1 block text-white/70">
+                    {timeStr}
+                  </span>
+                )}
               </div>
             </div>
           );
@@ -263,7 +269,7 @@ export default function MessagesPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Message Input — no top border */}
+      {/* Message Input */}
       <div className="fixed bottom-20 left-0 right-0 px-4 py-3 bg-background/90 backdrop-blur-sm app-container z-30">
         <div className="flex items-center gap-2">
           <input
@@ -272,15 +278,23 @@ export default function MessagesPage() {
             onChange={(e) => setMessageText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
             placeholder="Type a message..."
-            className="flex-1 bg-white border border-border rounded-full px-4 py-2.5 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-0 focus:border-uclaBlue"
+            className="flex-1 bg-white border border-border rounded-full px-4 py-2.5 text-body text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-0"
           />
           <button
             onClick={handleSendMessage}
             disabled={!messageText.trim()}
-            className="bg-uclaBlue text-white rounded-full p-2.5 hover:bg-[#25579e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className={`rounded-full p-2.5 transition-colors flex-shrink-0 border ${
+              messageText.trim()
+                ? 'bg-uclaBlue border-transparent active:bg-[#25579e]'
+                : 'bg-transparent border-border'
+            }`}
             aria-label="Send message"
           >
-            <Icon name="paperplane" size={18} className="text-white" />
+            <Icon
+              name="paperplane"
+              size={18}
+              className={messageText.trim() ? 'text-white' : 'text-lightSlate'}
+            />
           </button>
         </div>
       </div>

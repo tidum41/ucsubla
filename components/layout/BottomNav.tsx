@@ -1,22 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Icon from '../common/Icon';
+import { useMessages } from '@/lib/MessagesContext';
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const [hasUnread, setHasUnread] = useState(false);
-
-  useEffect(() => {
-    try {
-      const convos = JSON.parse(localStorage.getItem('uc-conversations') || '[]');
-      setHasUnread(convos.some((c: { unreadCount?: number }) => (c.unreadCount ?? 0) > 0));
-    } catch {
-      setHasUnread(false);
-    }
-  }, [pathname]);
+  const { conversations } = useMessages();
+  const hasUnread = conversations.some(c => (c.unreadCount ?? 0) > 0);
 
   const navItems = [
     { name: 'Home', icon: 'house', iconActive: 'house', path: '/' },
@@ -37,7 +29,7 @@ export default function BottomNav() {
             <Link
               key={item.path}
               href={item.path}
-              className="flex flex-col items-center gap-1"
+              className="flex flex-col items-center justify-center gap-1 min-h-[44px] min-w-[44px]"
             >
               <div className="relative">
                 <Icon
@@ -47,7 +39,7 @@ export default function BottomNav() {
                   strokeWidth={2}
                 />
                 {showUnread && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-uclaBlue border border-white" />
+                  <span className="absolute -top-[3px] -right-[3px] w-[7px] h-[7px] rounded-full bg-uclaBlue" />
                 )}
               </div>
               <span

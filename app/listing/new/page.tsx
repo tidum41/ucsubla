@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Icon from '@/components/common/Icon';
-import BottomNav from '@/components/layout/BottomNav';
 import WizardProgressBar from '@/components/listing-wizard/WizardProgressBar';
 import WizardStepShell from '@/components/listing-wizard/WizardStepShell';
 import Step1Photos from '@/components/listing-wizard/steps/Step1Photos';
@@ -413,7 +412,7 @@ export default function CreateListingPage() {
         <div className="blurHeaderCenteredContent">
           <button
             onClick={() => router.back()}
-            className="text-h3 text-uclaBlue font-medium w-[60px]"
+            className="text-h3 text-uclaBlue font-medium w-[60px] min-h-[44px] flex items-center"
           >
             Cancel
           </button>
@@ -433,7 +432,7 @@ export default function CreateListingPage() {
       </div>
 
       {/* Sticky footer */}
-      <div className="fixed bottom-20 left-0 right-0 app-container px-5 py-3 bg-white/90 backdrop-blur-sm border-t border-[#E2E8F0]">
+      <div className="fixed bottom-0 left-0 right-0 app-container px-5 pt-3 pb-safe bg-white/90 backdrop-blur-sm border-t border-[#E2E8F0]">
         <div className="flex items-center gap-3">
           {currentStep > 0 ? (
             <button
@@ -467,8 +466,6 @@ export default function CreateListingPage() {
           </button>
         </div>
       </div>
-
-      <BottomNav />
 
       {/* ─── Share prompt — slides up after publish ─────────────────────────── */}
       {showSharePrompt && publishedListingId && (

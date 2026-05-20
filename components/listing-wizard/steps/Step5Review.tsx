@@ -46,7 +46,7 @@ export default function Step5Review({ formData, errors, onDescriptionChange }: S
           placeholder="Tell renters about the space, the vibe, nearby spots, what makes it special..."
           rows={4}
           maxLength={1000}
-          className={`w-full bg-white border rounded-xl px-4 py-3 text-[13px] leading-[18px] text-darkSlate placeholder:text-lightSlate placeholder:text-[13px] focus:outline-none focus:ring-2 focus:ring-uclaBlue resize-none transition-colors ${
+          className={`w-full bg-white border rounded-xl px-4 py-3 text-small text-darkSlate placeholder:text-lightSlate focus:outline-none focus:ring-2 focus:ring-uclaBlue resize-none transition-colors ${
             errors.description ? 'border-red-400' : 'border-[#E2E8F0]'
           }`}
         />
@@ -81,7 +81,7 @@ export default function Step5Review({ formData, errors, onDescriptionChange }: S
               )}
               {/* Price badge */}
               <div className="absolute top-3 left-3 bg-white rounded-full px-3 py-1 shadow-card">
-                <span className="text-sm font-semibold text-uclaBlue">
+                <span className="text-body font-semibold text-uclaBlue">
                   {hasValidPrice ? formatPrice(Number(formData.price)) : '$—'}
                 </span>
               </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Icon from '../common/Icon';
 import RangeSlider from './RangeSlider';
 import ToggleSwitch from './ToggleSwitch';
@@ -34,6 +34,28 @@ export default function FilterModal({
   useEffect(() => {
     setFilters(initialFilters);
   }, [initialFilters]);
+
+  const [dragY, setDragY] = useState(0);
+  const dragStartRef = useRef<number | null>(null);
+
+  const handleDragStart = (e: React.TouchEvent) => {
+    dragStartRef.current = e.touches[0].clientY;
+  };
+  const handleDragMove = (e: React.TouchEvent) => {
+    if (dragStartRef.current === null) return;
+    const delta = e.touches[0].clientY - dragStartRef.current;
+    if (delta > 0) setDragY(delta);
+  };
+  const handleDragEnd = () => {
+    if (dragY > 100) {
+      setDragY(0);
+      dragStartRef.current = null;
+      onClose();
+    } else {
+      setDragY(0);
+      dragStartRef.current = null;
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -148,29 +170,53 @@ export default function FilterModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-background z-[1001] overflow-y-auto animate-slideUp">
-      <div className="min-h-screen pb-28">
-        {/* Header */}
-        <div className="sticky top-0 bg-[#F8FAFC] border-b-[1.5px] border-[#E2E8F0] z-10 safe-area-top">
-          <div className="flex items-center justify-between px-5 py-3">
+    /* Backdrop — tap outside to close */
+    <div
+      className="fixed inset-0 z-[1001]"
+      style={{ background: 'rgba(0,0,0,0.35)' }}
+      onClick={onClose}
+    >
+      {/* Sheet */}
+      <div
+        className="absolute bottom-0 left-0 right-0 bg-background rounded-t-2xl overflow-hidden flex flex-col animate-slideUp app-container"
+        style={{
+          height: '92vh',
+          transform: `translateY(${dragY}px)`,
+          transition: dragY === 0 ? 'transform 0.25s cubic-bezier(0.16,1,0.3,1)' : 'none',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header + drag handle */}
+        <div
+          className="bg-[#F8FAFC] border-b-[1.5px] border-[#E2E8F0] flex-shrink-0 cursor-grab active:cursor-grabbing"
+          onTouchStart={handleDragStart}
+          onTouchMove={handleDragMove}
+          onTouchEnd={handleDragEnd}
+        >
+          {/* Drag handle pill */}
+          <div className="flex justify-center pt-2.5 pb-1">
+            <div className="w-9 h-[3px] bg-gray-300 rounded-full" />
+          </div>
+          <div className="flex items-center justify-between px-5 py-2">
             <button
               onClick={handleReset}
-              className="text-h3 text-uclaBlue font-medium"
+              className="text-h3 text-uclaBlue font-medium min-h-[44px] flex items-center"
             >
               Reset
             </button>
             <h1 className="text-h1 text-darkSlate">Filters</h1>
             <button
               onClick={onClose}
-              className="p-1"
+              className="p-3"
+              aria-label="Close filters"
             >
               <Icon name="xmark" size={20} className="text-slateGray" />
             </button>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="px-5 py-6 space-y-6">
+        {/* Content — scrollable */}
+        <div className="flex-1 overflow-y-auto px-5 py-6 space-y-6 pb-28">
           {/* Verified UCLA Toggle */}
           <ToggleSwitch
             checked={filters.verifiedOnly}
@@ -371,8 +417,8 @@ export default function FilterModal({
           </label>
         </div>
 
-        {/* Apply (Fixed) */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 pb-safe app-container">
+        {/* Apply — pinned to bottom of sheet */}
+        <div className="flex-shrink-0 px-6 py-4 pb-safe bg-background border-t border-borderLight">
           <button
             onClick={handleApply}
             disabled={liveCount === 0}

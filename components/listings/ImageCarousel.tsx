@@ -92,7 +92,7 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
           <>
             <button
               onClick={goToPrevious}
-              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-colors"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg active:bg-white transition-colors"
               aria-label="Previous image"
             >
               <Icon name="chevron.left" size={24} className="text-darkSlate" />
@@ -100,7 +100,7 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
 
             <button
               onClick={goToNext}
-              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg active:bg-white transition-colors"
               aria-label="Next image"
             >
               <Icon name="chevron.right" size={24} className="text-darkSlate" />
@@ -119,7 +119,7 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
               className={`w-1.5 h-1.5 rounded-full transition-colors ${
                 index === currentIndex
                   ? 'bg-slateGray'
-                  : 'bg-slateGray/30 hover:bg-slateGray/50'
+                  : 'bg-slateGray/30 active:bg-slateGray/50'
               }`}
               aria-label={`Go to image ${index + 1}`}
             />

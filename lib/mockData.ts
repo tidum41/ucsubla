@@ -402,7 +402,71 @@ export const mockReviews: Review[] = [
   },
 ];
 
-// Mock messages and conversations — populated live via compose modal
-export const mockMessages: Message[] = [];
+// Pre-populated demo conversation
+export const mockConversations: Conversation[] = [
+  {
+    id: 'conv-demo-1',
+    listingId: 'listing-1',
+    participants: ['user-1', 'peter-parker'],
+    lastMessage: {
+      id: 'msg-demo-6',
+      conversationId: 'conv-demo-1',
+      senderId: 'peter-parker',
+      text: 'Sounds good! Let me know what works for you. I\'m usually home after 6pm.',
+      timestamp: '2026-05-18T18:45:00Z',
+      read: false,
+    },
+    unreadCount: 1,
+  },
+];
 
-export const mockConversations: Conversation[] = [];
+export const mockMessages: Message[] = [
+  {
+    id: 'msg-demo-1',
+    conversationId: 'conv-demo-1',
+    senderId: 'user-1',
+    text: 'Hey Peter! Saw your listing on BruinLease — the single on Levering looks perfect for the summer. Is it still available June 10th?',
+    timestamp: '2026-05-17T10:12:00Z',
+    read: true,
+  },
+  {
+    id: 'msg-demo-2',
+    conversationId: 'conv-demo-1',
+    senderId: 'peter-parker',
+    text: 'Hey Miles! Yeah it\'s still available. I\'m subbing it out while I\'m doing an internship at Oscorp — back to Queens for the summer. The room gets great morning light, perfect for the early riser 😄',
+    timestamp: '2026-05-17T11:30:00Z',
+    read: true,
+  },
+  {
+    id: 'msg-demo-3',
+    conversationId: 'conv-demo-1',
+    senderId: 'user-1',
+    text: 'Haha nice. Quick q — is the wifi solid? I\'ve been doing a lot of work from home lately (let\'s just say my "extracurriculars" keep me pretty busy at night)',
+    timestamp: '2026-05-17T11:45:00Z',
+    read: true,
+  },
+  {
+    id: 'msg-demo-4',
+    conversationId: 'conv-demo-1',
+    senderId: 'peter-parker',
+    text: 'Ha, same honestly. The wifi is 600Mbps fiber, barely any lag even during peak hours. I was editing photos and running uploads at 2am no problem. The neighbors are pretty chill too — one of them works nights so it stays quiet.',
+    timestamp: '2026-05-17T12:03:00Z',
+    read: true,
+  },
+  {
+    id: 'msg-demo-5',
+    conversationId: 'conv-demo-1',
+    senderId: 'user-1',
+    text: 'That\'s exactly what I need. Any flexibility on the move-in date? I\'ve got some stuff wrapping up around June 8th and it would be tight otherwise.',
+    timestamp: '2026-05-18T09:20:00Z',
+    read: true,
+  },
+  {
+    id: 'msg-demo-6',
+    conversationId: 'conv-demo-1',
+    senderId: 'peter-parker',
+    text: 'Sounds good! Let me know what works for you. I\'m usually home after 6pm.',
+    timestamp: '2026-05-18T18:45:00Z',
+    read: false,
+  },
+];

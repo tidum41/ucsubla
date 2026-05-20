@@ -102,7 +102,7 @@ export default function ProfilePage() {
             <div className="card p-5">
               <button
                 onClick={() => router.push('/profile/edit')}
-                className="flex items-center gap-3 mb-3 w-full text-left hover:opacity-80 transition-opacity"
+                className="flex items-center gap-3 mb-3 w-full text-left active:opacity-70 transition-opacity"
               >
                 {/* Avatar */}
                 <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
@@ -142,7 +142,7 @@ export default function ProfilePage() {
               <button
                 key={index}
                 onClick={item.onClick}
-                className="w-full card p-4 hover:bg-gray-50 transition-colors flex items-center justify-between"
+                className="w-full card p-4 active:bg-gray-50 transition-colors flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
@@ -172,7 +172,7 @@ export default function ProfilePage() {
           <div className="px-5 mt-6">
             <button
               onClick={() => router.push('/login')}
-              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-body text-red-500 font-medium hover:bg-red-50 transition-colors"
+              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-body text-red-500 font-medium active:bg-red-50 transition-colors"
             >
               Log Out
             </button>

@@ -37,7 +37,7 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
       className="block animate-cardFadeUp cursor-pointer"
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      <div className="card shadow-minimal hover:shadow-card transition-shadow duration-200">
+      <div className="card shadow-minimal active:shadow-card transition-shadow duration-200">
         {/* Image */}
         <div className="relative h-56 bg-gray-200 overflow-hidden">
           {!imageError ? (
@@ -71,7 +71,7 @@ export default function ListingCard({ listing, isBookmarked, onBookmarkToggle, i
             </h3>
             <button
               onClick={handleBookmarkClick}
-              className="flex-shrink-0 p-0"
+              className="flex-shrink-0 p-3 -m-3"
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
               <BookmarkIcon
