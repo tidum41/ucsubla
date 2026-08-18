@@ -77,10 +77,12 @@ export default function BruinLeaseIAMap() {
         <div className="bl-ia-phone" role="img" aria-label={`App structure preview, ${tab.label} selected`}>
           <div className="bl-ia-phone-header">
             <span className="bl-ia-brand">BruinLease</span>
-            <button type="button" className="bl-ia-list-cta" tabIndex={-1} aria-hidden>
-              + List
-            </button>
-            <span className="bl-ia-annot bl-ia-annot-list">always available · not a tab</span>
+            <div className="bl-ia-list-wrap">
+              <button type="button" className="bl-ia-list-cta" tabIndex={-1} aria-hidden>
+                + List
+              </button>
+              <span className="bl-ia-annot">not a tab</span>
+            </div>
           </div>
 
           <div className="bl-ia-screen">
@@ -339,9 +341,8 @@ const CSS = `
 }
 
 .bl-ia-phone-header {
-  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding: 12px 12px 10px;
   border-bottom: 1px solid var(--bl-ia-border);
@@ -351,6 +352,13 @@ const CSS = `
   font-size: 13px;
   font-weight: 600;
   color: var(--bl-ia-blue);
+}
+
+.bl-ia-list-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
 
 .bl-ia-list-cta {
@@ -366,22 +374,18 @@ const CSS = `
 }
 
 .bl-ia-annot {
-  position: absolute;
-  right: 10px;
-  top: 38px;
   font-size: 10px;
   color: var(--bl-ia-ter);
   background: var(--bl-ia-accent);
   border-radius: 4px;
   padding: 2px 6px;
   white-space: nowrap;
-  z-index: 1;
 }
 
 .bl-ia-screen {
   flex: 1;
   background: var(--bl-ia-bg);
-  padding: 28px 10px 10px;
+  padding: 10px;
   min-height: 200px;
 }
 
