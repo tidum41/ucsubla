@@ -1,7 +1,7 @@
 From 1860a190efdf67c534ae030e9a1da35dc3c54e0a Mon Sep 17 00:00:00 2001
 From: Cursor Agent <cursoragent@cursor.com>
 Date: Tue, 18 Aug 2026 02:23:39 +0000
-Subject: [PATCH] Add visual Information Architecture section to BruinLease
+Subject: [PATCH 1/2] Add visual Information Architecture section to BruinLease
  case study
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -718,6 +718,89 @@ index 0000000..74a386c
 +  }
 +}
 +`;
+-- 
+2.43.0
+
+
+From 1dad46c7f5c4a8f77fa0875b8d2e1477b447bb16 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Tue, 18 Aug 2026 02:28:07 +0000
+Subject: [PATCH 2/2] Clarify List CTA annotation on IA phone map
+
+---
+ components/BruinLeaseIAMap.tsx | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
+
+diff --git a/components/BruinLeaseIAMap.tsx b/components/BruinLeaseIAMap.tsx
+index 74a386c..8c6f078 100644
+--- a/components/BruinLeaseIAMap.tsx
++++ b/components/BruinLeaseIAMap.tsx
+@@ -77,10 +77,12 @@ export default function BruinLeaseIAMap() {
+         <div className="bl-ia-phone" role="img" aria-label={`App structure preview, ${tab.label} selected`}>
+           <div className="bl-ia-phone-header">
+             <span className="bl-ia-brand">BruinLease</span>
+-            <button type="button" className="bl-ia-list-cta" tabIndex={-1} aria-hidden>
+-              + List
+-            </button>
+-            <span className="bl-ia-annot bl-ia-annot-list">always available · not a tab</span>
++            <div className="bl-ia-list-wrap">
++              <button type="button" className="bl-ia-list-cta" tabIndex={-1} aria-hidden>
++                + List
++              </button>
++              <span className="bl-ia-annot">not a tab</span>
++            </div>
+           </div>
+ 
+           <div className="bl-ia-screen">
+@@ -339,9 +341,8 @@ const CSS = `
+ }
+ 
+ .bl-ia-phone-header {
+-  position: relative;
+   display: flex;
+-  align-items: center;
++  align-items: flex-start;
+   justify-content: space-between;
+   padding: 12px 12px 10px;
+   border-bottom: 1px solid var(--bl-ia-border);
+@@ -353,6 +354,13 @@ const CSS = `
+   color: var(--bl-ia-blue);
+ }
+ 
++.bl-ia-list-wrap {
++  display: flex;
++  flex-direction: column;
++  align-items: flex-end;
++  gap: 4px;
++}
++
+ .bl-ia-list-cta {
+   appearance: none;
+   border: none;
+@@ -366,22 +374,18 @@ const CSS = `
+ }
+ 
+ .bl-ia-annot {
+-  position: absolute;
+-  right: 10px;
+-  top: 38px;
+   font-size: 10px;
+   color: var(--bl-ia-ter);
+   background: var(--bl-ia-accent);
+   border-radius: 4px;
+   padding: 2px 6px;
+   white-space: nowrap;
+-  z-index: 1;
+ }
+ 
+ .bl-ia-screen {
+   flex: 1;
+   background: var(--bl-ia-bg);
+-  padding: 28px 10px 10px;
++  padding: 10px;
+   min-height: 200px;
+ }
+ 
 -- 
 2.43.0
 
