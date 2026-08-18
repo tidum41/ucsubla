@@ -12,8 +12,27 @@ export default function DesignSystem() {
           </div>
           <span style={{ fontSize: '24px', fontWeight: '600', color: '#2d68c4' }}>BruinLease</span>
         </div>
-        <h1 style={{ fontSize: '32px', fontWeight: '600', margin: '0 0 8px' }}>Design System</h1>
-        <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>UCLA Subleasing App — Visual Language & Component Library</p>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+          <div>
+            <h1 style={{ fontSize: '32px', fontWeight: '600', margin: '0 0 8px' }}>Design System</h1>
+            <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>UCLA Subleasing App — Visual Language & Component Library</p>
+          </div>
+          <a
+            href="/information-architecture"
+            style={{
+              fontSize: '13px',
+              color: '#2d68c4',
+              textDecoration: 'none',
+              fontWeight: 500,
+              border: '1.5px solid #2d68c4',
+              borderRadius: '18px',
+              padding: '7px 14px',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Information Architecture →
+          </a>
+        </div>
       </div>
 
       {/* ── SECTION 1: COLORS ── */}
